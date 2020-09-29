@@ -3,7 +3,6 @@ import React, { FunctionComponent } from "react";
 import s from "./Navbar.module.css";
 import { Logo, Container } from "@components/ui";
 import { Avatar, Searchbar } from "@components/core";
-import { Heart, Bag } from "@components/icon";
 interface Props {
   className?: string;
   children?: any;
@@ -22,9 +21,7 @@ const Navbar: FunctionComponent<Props> = ({ className }) => {
           <a>Accesories</a>
         </nav>
       </div>
-      <nav className="flex flex-row items-center">
-        <Bag className="mr-6" />
-        <Heart className="mr-6" />
+      <nav>
         <Avatar />
       </nav>
     </Container>
