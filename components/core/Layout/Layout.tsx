@@ -4,8 +4,6 @@ import s from "./Layout.module.css";
 import { Navbar, Featurebar } from "@components/core";
 import { Container, Sidebar } from "@components/ui";
 import { CartSidebarView } from "@components/cart";
-import { useUI } from "@components/ui/context";
-
 interface Props {
   className?: string;
   children?: any;
@@ -13,7 +11,6 @@ interface Props {
 
 const Layout: FunctionComponent<Props> = ({ className, children }) => {
   const rootClassName = cn(s.root, className);
-  const { displaySidebar } = useUI();
   return (
     <Container className={rootClassName}>
       <Featurebar
@@ -22,11 +19,9 @@ const Layout: FunctionComponent<Props> = ({ className, children }) => {
       />
       <Navbar />
       <main className="h-screen">{children}</main>
-      {displaySidebar && (
-        <Sidebar>
-          <CartSidebarView />
-        </Sidebar>
-      )}
+      {/* <Sidebar>
+        <CartSidebarView />
+      </Sidebar> */}
     </Container>
   );
 };
