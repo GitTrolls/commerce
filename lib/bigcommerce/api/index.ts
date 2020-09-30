@@ -10,9 +10,15 @@ type RecursivePartial<T> = {
   [P in keyof T]?: RecursivePartial<T[P]>;
 };
 
+export interface GetAllProductsResult<T> {
+  products: T extends GetAllProductsQuery
+    ? T['site']['products']['edges']
+    : unknown;
+}
+
 export default class BigcommerceAPI implements CommerceAPI {
-  commerceUrl: string;
-  apiToken: string;
+  protected commerceUrl: string;
+  protected apiToken: string;
 
   constructor({ commerceUrl, apiToken }: CommerceAPIOptions) {
     this.commerceUrl = commerceUrl;
@@ -43,10 +49,36 @@ export default class BigcommerceAPI implements CommerceAPI {
     return json.data;
   }
 
-  async getAllProducts<T = GetAllProductsQuery>(
-    query: string = getAllProductsQuery
-  ): Promise<T> {
-    const data = await this.fetch<RecursivePartial<GetAllProductsQuery>>(query);
-    return data as T;
+  async getAllProducts<T>(opts: {
+    query: string;
+  }): Promise<GetAllProductsResult<T>>;
+  async getAllProducts<T = GetAllProductsQuery>({
+    query,
+  }: { query?: string } = {}): Promise<
+    GetAllProductsResult<T | GetAllProductsQuery>
+    // T extends GetAllProductsQuery
+    //   ? GetAllProductsResult<T['site']['products']['edges']>
+    //   : Partial<GetAllProductsResult<any>>
+  > {
+    if (!query) {
+      const data = await this.fetch<GetAllProductsQuery>(getAllProductsQuery);
+
+      return {
+        products: data.site.products.edges,
+      };
+    }
+
+    return {
+      products: undefined,
+    };
   }
+}
+
+let h = new BigcommerceAPI({ apiToken: '', commerceUrl: '' });
+
+async function yay() {
+  const x = await h.getAllProducts<{ custom: 'val' }>({ query: 'yes' });
+  const y = await h.getAllProducts();
+
+  console.log(x.products);
 }

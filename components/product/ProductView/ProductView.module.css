@@ -1,7 +1,0 @@
-.root {
-  @apply flex flex-row h-screen py-12;
-}
-
-.button {
-  min-width: 300px;
-}
