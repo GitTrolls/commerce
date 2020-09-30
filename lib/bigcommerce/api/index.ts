@@ -69,3 +69,12 @@ export default class BigcommerceAPI implements CommerceAPI {
     };
   }
 }
+
+let h = new BigcommerceAPI({ apiToken: '', commerceUrl: '' });
+
+async function yay() {
+  const x = await h.getAllProducts<{ custom: 'val' }>({ query: 'yes' });
+  const y = await h.getAllProducts();
+
+  console.log(x.products);
+}
