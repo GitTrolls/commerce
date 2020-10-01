@@ -13,23 +13,21 @@ interface Props {
 
 const Layout: FunctionComponent<Props> = ({ className, children }) => {
   const rootClassName = cn(s.root, className);
-  const { displaySidebar, closeSidebar } = useUI();
+  const { displaySidebar } = useUI();
   return (
-    <div className={rootClassName}>
+    <Container className={rootClassName}>
       <Featurebar
         title="Free Standard Shipping on orders over $99.99"
         description="Due to COVID-19, some orders may experience processing and delivery delays."
       />
-      <Container>
-        <Navbar />
-        <main className="h-screen">{children}</main>
-      </Container>
+      <Navbar />
+      <main className="h-screen">{children}</main>
       {displaySidebar && (
-        <Sidebar closeSidebar={closeSidebar}>
+        <Sidebar>
           <CartSidebarView />
         </Sidebar>
       )}
-    </div>
+    </Container>
   );
 };
 
