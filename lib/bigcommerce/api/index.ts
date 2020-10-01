@@ -26,11 +26,8 @@ export type ProductImageVariables = Pick<
   | 'imgXLHeight'
 >;
 
-export interface BigcommerceConfigOptions extends CommerceAPIConfig {
+export interface BigcommerceConfig extends CommerceAPIConfig {
   images?: Images;
-}
-
-export interface BigcommerceConfig extends BigcommerceConfigOptions {
   readonly imageVariables?: ProductImageVariables;
 }
 
@@ -49,49 +46,31 @@ if (!API_TOKEN) {
   );
 }
 
-export class Config {
-  private config: BigcommerceConfig;
-
-  constructor(config: BigcommerceConfigOptions) {
-    this.config = {
-      ...config,
-      get imageVariables() {
-        const { images } = this;
-        return images
-          ? {
-              imgSmallWidth: images.small?.width,
-              imgSmallHeight: images.small?.height,
-              imgMediumWidth: images.medium?.height,
-              imgMediumHeight: images.medium?.height,
-              imgLargeWidth: images.large?.height,
-              imgLargeHeight: images.large?.height,
-              imgXLWidth: images.xl?.height,
-              imgXLHeight: images.xl?.height,
-            }
-          : undefined;
-      },
-    };
-  }
-
-  getConfig() {
-    return this.config;
-  }
-
-  setConfig(newConfig: Partial<BigcommerceConfig>) {
-    Object.assign(this.config, newConfig);
-  }
-}
-
-const config = new Config({
+const config: BigcommerceConfig = {
   commerceUrl: API_URL,
   apiToken: API_TOKEN,
   fetch: fetchAPI,
-});
+  get imageVariables() {
+    const { images } = this;
+    return images
+      ? {
+          imgSmallWidth: images.small?.width,
+          imgSmallHeight: images.small?.height,
+          imgMediumWidth: images.medium?.height,
+          imgMediumHeight: images.medium?.height,
+          imgLargeWidth: images.large?.height,
+          imgLargeHeight: images.large?.height,
+          imgXLWidth: images.xl?.height,
+          imgXLHeight: images.xl?.height,
+        }
+      : undefined;
+  },
+};
 
 export function getConfig() {
-  return config.getConfig();
+  return config;
 }
 
 export function setConfig(newConfig: Partial<BigcommerceConfig>) {
-  return config.setConfig(newConfig);
+  Object.assign(config, newConfig);
 }
