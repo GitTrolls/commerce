@@ -1,7 +1,7 @@
 import cn from "classnames";
 import React, { FunctionComponent } from "react";
 import s from "./Swatch.module.css";
-import { Colors } from "@components/ui/types";
+import { Colors } from "@components/types";
 
 interface Props {
   className?: string;

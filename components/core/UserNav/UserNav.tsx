@@ -16,11 +16,8 @@ const UserNav: FunctionComponent<Props> = ({ className }) => {
   return (
     <nav className={rootClassName}>
       <ul className={s.list}>
-        <li className={s.item} onClick={openSidebar}>
-          <Bag />
-          <span className="bg-black h-4 w-4 absolute rounded-full inset-3 text-white flex items-center justify-center font-bold text-xs">
-            1
-          </span>
+        <li className={s.item}>
+          <Bag onClick={openSidebar} />
         </li>
         <li className={s.item}>
           <Heart />
