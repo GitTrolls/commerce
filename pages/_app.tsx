@@ -1,15 +1,13 @@
-import { FC } from 'react'
-import type { AppProps } from 'next/app'
-import '@assets/global.css'
+import "@assets/global.css";
+import React from "react";
+import { UIProvider } from "@components/ui/context";
 
-const Noop: FC = ({ children }) => <>{children}</>
-
-export default function MyApp({ Component, pageProps }: AppProps) {
-  const Layout = (Component as any).Layout || Noop
-
+export default function MyApp({ Component, pageProps }) {
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
-  )
+    <>
+      <UIProvider>
+        <Component {...pageProps} />
+      </UIProvider>
+    </>
+  );
 }
