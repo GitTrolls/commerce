@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "pre-build": "yarn generate",
     "build": "next build",
     "start": "next start",
     "generate": "graphql-codegen"
@@ -41,8 +42,5 @@
     "prettier": "^2.1.2",
     "tailwindcss": "^1.8.10",
     "typescript": "^4.0.3"
-  },
-  "resolutions": {
-    "webpack": "^5.0.0-beta.30"
   }
 }
