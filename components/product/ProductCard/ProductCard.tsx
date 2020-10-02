@@ -16,6 +16,7 @@ interface ProductData {
 
 const ProductCard: FC<Props> = ({ className, productData }) => {
   const rootClassName = cn(s.root, className)
+  console.log(productData)
   return (
     <div className={rootClassName}>
       {/* Overlay */}
