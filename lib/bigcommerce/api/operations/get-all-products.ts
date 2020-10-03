@@ -47,6 +47,7 @@ export type ProductVariables = Images &
   Omit<GetAllProductsQueryVariables, keyof ProductImageVariables>
 
 async function getAllProducts(opts?: {
+  query?: string
   variables?: ProductVariables
   config?: BigcommerceConfig
 }): Promise<GetAllProductsResult<GetAllProductsQuery>>

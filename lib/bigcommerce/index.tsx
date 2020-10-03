@@ -1,9 +1,9 @@
-import { ReactNode } from 'react'
 import {
-  CommerceConfig,
   CommerceProvider as CoreCommerceProvider,
+  Connector,
   useCommerce as useCoreCommerce,
 } from 'lib/commerce'
+import { ReactNode } from 'react'
 
 async function getText(res: Response) {
   try {
@@ -31,21 +31,19 @@ async function fetcher(url: string, query: string) {
   throw await getError(res)
 }
 
-export const bigcommerceConfig: CommerceConfig = {
+export const bigcommerce: Connector = {
   locale: 'en-us',
   fetcher,
 }
 
-export type BigcommerceConfig = Partial<CommerceConfig>
-
-export type BigcommerceProps = {
-  children?: ReactNode
-  config: BigcommerceConfig
+interface Props {
+  children?: ReactNode | any
 }
 
-export function CommerceProvider({ children, config }: BigcommerceProps) {
+// TODO: The connector should be extendable when a developer is using it
+export function CommerceProvider({ children }: Props) {
   return (
-    <CoreCommerceProvider config={{ ...config, ...bigcommerceConfig }}>
+    <CoreCommerceProvider connector={bigcommerce}>
       {children}
     </CoreCommerceProvider>
   )
