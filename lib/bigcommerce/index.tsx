@@ -21,23 +21,19 @@ async function getError(res: Response) {
   return { message: await getText(res) }
 }
 
+async function fetcher(url: string, query: string) {
+  const res = await fetch(url)
+
+  if (res.ok) {
+    return res.json()
+  }
+
+  throw await getError(res)
+}
+
 export const bigcommerceConfig: CommerceConfig = {
   locale: 'en-us',
-  async fetcher({ url, method = 'GET', variables, body: bodyObj }) {
-    const hasBody = Boolean(variables || bodyObj)
-    const body = hasBody
-      ? JSON.stringify(variables ? { variables } : bodyObj)
-      : undefined
-    const headers = hasBody ? { 'Content-Type': 'application/json' } : undefined
-    const res = await fetch(url!, { method, body, headers })
-
-    if (res.ok) {
-      const { data } = await res.json()
-      return data
-    }
-
-    throw await getError(res)
-  },
+  fetcher,
 }
 
 export type BigcommerceConfig = Partial<CommerceConfig>
