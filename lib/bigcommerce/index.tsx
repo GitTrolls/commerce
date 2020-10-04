@@ -21,17 +21,19 @@ async function getError(res: Response) {
   return { message: await getText(res) }
 }
 
+async function fetcher(url: string, query: string) {
+  const res = await fetch(url)
+
+  if (res.ok) {
+    return res.json()
+  }
+
+  throw await getError(res)
+}
+
 export const bigcommerceConfig: CommerceConfig = {
   locale: 'en-us',
-  async fetcher({ url, query }) {
-    const res = await fetch(url!)
-
-    if (res.ok) {
-      return res.json()
-    }
-
-    throw await getError(res)
-  },
+  fetcher,
 }
 
 export type BigcommerceConfig = Partial<CommerceConfig>

@@ -7,14 +7,9 @@ import {
 export type Cart = any
 
 export const CartProvider: FC = ({ children }) => {
-  return <CommerceCartProvider url="/api/cart">{children}</CommerceCartProvider>
+  return <CommerceCartProvider query="">{children}</CommerceCartProvider>
 }
 
 export function useCart() {
-  const cart = useCommerceCart<Cart>()
-
-  // TODO: Do something to make this prop work
-  cart.isEmpty = true
-
-  return cart
+  return useCommerceCart<Cart>()
 }
