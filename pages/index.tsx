@@ -16,12 +16,17 @@ export default function Home({
   return (
     <>
       <ProductGrid
-        products={[...products, ...products, ...products, ...products]}
-        layout="C"
+        products={[
+          ...products,
+          ...products,
+          ...products,
+          ...products,
+          ...products,
+          ...products,
+        ]}
       />
-      {/* <ProductGrid products={[...products.slice(0, 3)]} layout={2} /> */}
-      {/* <div></div> */}
-      {/* <ProductGrid products={products.slice(3)} /> */}
+      <div>asdsasad</div>
+      <ProductGrid products={products.slice(3)} />
     </>
   )
 }
