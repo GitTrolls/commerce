@@ -63,7 +63,7 @@ export default function Home({
         )}
       />
       <div className="py-12 flex flex-row w-full">
-        <div className="flex-0 pr-3 w-48 break-words">
+        <div className="flex-0 pr-3 w-48">
           ALL CATEGORIES ACCESSORIES BAGS CLOTHING SHOES ALL DESIGNERS 032c 1017
         </div>
         <div className="flex-1">
