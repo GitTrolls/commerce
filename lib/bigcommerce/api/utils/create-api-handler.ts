@@ -1,16 +1,11 @@
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import { BigcommerceConfig, getConfig } from '..'
 
-export type BigcommerceApiHandler<T = any> = (
+export type BigcommerceApiHandler = (
   req: NextApiRequest,
-  res: NextApiResponse<BigcommerceApiResponse<T>>,
+  res: NextApiResponse,
   config: BigcommerceConfig
 ) => void | Promise<void>
-
-export type BigcommerceApiResponse<T> = {
-  data: T | null
-  errors?: { message: string }[]
-}
 
 export default function createApiHandler(handler: BigcommerceApiHandler) {
   return function getApiHandler({

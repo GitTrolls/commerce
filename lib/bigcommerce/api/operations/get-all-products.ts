@@ -37,13 +37,11 @@ export const getAllProductsQuery = /* GraphQL */ `
   ${productInfoFragment}
 `
 
-export type Products = NonNullable<
-  GetAllProductsQuery['site']['products']['edges']
->
-
-export type GetAllProductsResult<
-  T extends { products: any[] } = { products: Products }
-> = T
+export interface GetAllProductsResult<T> {
+  products: T extends GetAllProductsQuery
+    ? NonNullable<T['site']['products']['edges']>
+    : unknown
+}
 
 export type ProductVariables = Images &
   Omit<GetAllProductsQueryVariables, keyof ProductImageVariables>
@@ -51,9 +49,9 @@ export type ProductVariables = Images &
 async function getAllProducts(opts?: {
   variables?: ProductVariables
   config?: BigcommerceConfig
-}): Promise<GetAllProductsResult>
+}): Promise<GetAllProductsResult<GetAllProductsQuery>>
 
-async function getAllProducts<T extends { products: any[] }, V = any>(opts: {
+async function getAllProducts<T, V = any>(opts: {
   query: string
   variables?: V
   config?: BigcommerceConfig
@@ -67,7 +65,7 @@ async function getAllProducts({
   query?: string
   variables?: ProductVariables
   config?: BigcommerceConfig
-} = {}): Promise<GetAllProductsResult> {
+} = {}): Promise<GetAllProductsResult<GetAllProductsQuery>> {
   config = getConfig(config)
   const variables: GetAllProductsQueryVariables = {
     ...config.imageVariables,

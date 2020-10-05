@@ -16,22 +16,17 @@ export const getAllProductPathsQuery = /* GraphQL */ `
   }
 `
 
-export type ProductPaths = NonNullable<
-  GetAllProductPathsQuery['site']['products']['edges']
->
-
-export type GetAllProductPathsResult<
-  T extends { products: any[] } = { products: ProductPaths }
-> = T
+export interface GetAllProductPathsResult<T> {
+  products: T extends GetAllProductPathsQuery
+    ? NonNullable<T['site']['products']['edges']>
+    : unknown
+}
 
 async function getAllProductPaths(opts?: {
   config?: BigcommerceConfig
-}): Promise<GetAllProductPathsResult>
+}): Promise<GetAllProductPathsResult<GetAllProductPathsQuery>>
 
-async function getAllProductPaths<
-  T extends { products: any[] },
-  V = any
->(opts: {
+async function getAllProductPaths<T, V = any>(opts: {
   query: string
   config?: BigcommerceConfig
 }): Promise<GetAllProductPathsResult<T>>
@@ -42,7 +37,7 @@ async function getAllProductPaths({
 }: {
   query?: string
   config?: BigcommerceConfig
-} = {}): Promise<GetAllProductPathsResult> {
+} = {}): Promise<GetAllProductPathsResult<GetAllProductPathsQuery>> {
   config = getConfig(config)
   // RecursivePartial forces the method to check for every prop in the data, which is
   // required in case there's a custom `query`
