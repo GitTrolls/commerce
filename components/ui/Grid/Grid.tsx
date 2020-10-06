@@ -35,8 +35,8 @@ const Grid: FC<Props> = ({
   )
   return (
     <div className={rootClassName}>
-      {items.map((data: any, i: any) => (
-        <Component key={i} {...data} />
+      {items.map((data: any) => (
+        <Component {...data} />
       ))}
     </div>
   )
