@@ -4,9 +4,6 @@ export const responsiveImageFragment = /* GraphQL */ `
     urlMedium: url(width: $imgMediumWidth, height: $imgMediumHeight)
     urlLarge: url(width: $imgLargeWidth, height: $imgLargeHeight)
     urlXL: url(width: $imgXLWidth, height: $imgXLHeight)
-    urlOriginal
-    altText
-    isDefault
   }
 `
 
