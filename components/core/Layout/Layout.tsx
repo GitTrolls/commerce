@@ -2,7 +2,6 @@ import cn from 'classnames'
 import { FC } from 'react'
 import s from './Layout.module.css'
 import { CommerceProvider } from '@lib/bigcommerce'
-import { CartProvider } from '@lib/bigcommerce/cart'
 import { Navbar, Featurebar, Footer } from '@components/core'
 import { Container, Sidebar } from '@components/ui'
 import { CartSidebarView } from '@components/cart'
@@ -15,7 +14,7 @@ interface Props {
 
 const CoreLayout: FC<Props> = ({ className, children }) => {
   const rootClassName = cn(s.root, className)
-  const { displaySidebar } = useUI()
+  const { displaySidebar, closeSidebar } = useUI()
 
   return (
     <div className={rootClassName}>
@@ -28,7 +27,7 @@ const CoreLayout: FC<Props> = ({ className, children }) => {
         <main className={s.main}>{children}</main>
       </Container>
       <Footer />
-      <Sidebar show={displaySidebar}>
+      <Sidebar show={displaySidebar} close={closeSidebar}>
         <CartSidebarView />
       </Sidebar>
     </div>
@@ -37,11 +36,9 @@ const CoreLayout: FC<Props> = ({ className, children }) => {
 
 const Layout: FC<Props> = (props) => (
   <CommerceProvider locale="en-us">
-    <CartProvider>
       <UIProvider>
         <CoreLayout {...props} />
       </UIProvider>
-    </CartProvider>
   </CommerceProvider>
 )
 
