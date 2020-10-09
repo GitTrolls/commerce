@@ -16,20 +16,17 @@ const countItems = (count: number, items: any[]) =>
   items.reduce(countItem, count)
 
 const UserNav: FC<Props> = ({ className }) => {
-  const { openSidebar, closeSidebar, displaySidebar } = useUI()
+  const { openSidebar } = useUI()
   const { data } = useCart()
   const itemsCount = Object.values(data?.line_items ?? {}).reduce(countItems, 0)
 
   return (
     <nav className={cn(s.root, className)}>
       <ul className={s.list}>
-        <li
-          className={s.item}
-          onClick={() => (displaySidebar ? closeSidebar() : openSidebar())}
-        >
+        <li className={s.item} onClick={() => openSidebar()}>
           <Bag />
           {itemsCount > 0 && (
-            <span className="bg-black h-4 w-4 absolute rounded-full right-3 top-3 text-white flex items-center justify-center font-bold text-xs">
+            <span className="bg-black h-4 w-4 absolute rounded-full inset-3 text-white flex items-center justify-center font-bold text-xs">
               {itemsCount}
             </span>
           )}
