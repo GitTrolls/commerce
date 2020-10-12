@@ -40,7 +40,7 @@ const M: FC<Props> = ({
 
   return (
     <div className={rootClassName}>
-      <Ticker offset={80}>
+      <Ticker>
         {({ index }) => (
           <div className={s.container}>
             {items.map((p: any, i: any) => (
