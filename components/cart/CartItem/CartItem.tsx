@@ -1,8 +1,9 @@
 import { Trash, Plus, Minus } from '@components/icon'
-import usePrice from '@lib/bigcommerce/use-price'
+import { useCommerce } from '@lib/bigcommerce'
 import useUpdateItem from '@lib/bigcommerce/cart/use-update-item'
 import useRemoveItem from '@lib/bigcommerce/cart/use-remove-item'
 import { ChangeEvent, useEffect, useState } from 'react'
+import formatVariantPrice from 'utils/format-item-price'
 import styles from './CartItem.module.css'
 
 const CartItem = ({
@@ -12,14 +13,16 @@ const CartItem = ({
   item: any
   currencyCode: string
 }) => {
-  const { price } = usePrice({
-    amount: item.extended_sale_price,
-    baseAmount: item.extended_list_price,
-    currencyCode,
-  })
+  const { locale } = useCommerce()
   const updateItem = useUpdateItem(item)
   const removeItem = useRemoveItem()
   const [quantity, setQuantity] = useState(item.quantity)
+  const { price } = formatVariantPrice({
+    listPrice: item.extended_list_price,
+    salePrice: item.extended_sale_price,
+    currencyCode,
+    locale,
+  })
   const updateQuantity = async (val: number) => {
     const data = await updateItem({ quantity: val })
   }
