@@ -38,7 +38,7 @@ const CartSidebarView: FC = () => {
   return (
     <div
       className={cn('h-full flex flex-col', {
-        'bg-white text-black': isEmpty,
+        'bg-black text-white': isEmpty,
         'bg-red text-white': error,
         'bg-green text-white': success,
       })}
