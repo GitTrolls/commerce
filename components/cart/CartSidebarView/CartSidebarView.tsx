@@ -5,15 +5,25 @@ import { Button } from '@components/ui'
 import { ArrowLeft, Bag, Cross, Check } from '@components/icon'
 import { useUI } from '@components/ui/context'
 import useCart from '@lib/bigcommerce/cart/use-cart'
+import usePrice from '@lib/bigcommerce/use-price'
 import CartItem from '../CartItem'
 import useOpenCheckout from '@lib/bigcommerce/cart/use-open-checkout'
 
 const CartSidebarView: FC = () => {
   const { data, isEmpty } = useCart()
+  const { price: subTotal } = usePrice(data && {
+    amount: data.base_amount,
+    currencyCode: data.currency.code,
+  })
+  const { price: total } = usePrice(data && {
+    amount: data.cart_amount,
+    currencyCode: data.currency.code,
+  })
   const openCheckout = useOpenCheckout()
   const { closeSidebar } = useUI()
-  const items = data?.line_items.physical_items ?? []
   const handleClose = () => closeSidebar()
+
+  const items = data?.line_items.physical_items ?? []
 
   console.log('CART', data, isEmpty)
 
@@ -96,11 +106,11 @@ const CartSidebarView: FC = () => {
               <ul className="py-3">
                 <li className="flex justify-between py-1">
                   <span>Subtotal</span>
-                  <span>$100</span>
+                  <span>{subTotal}</span>
                 </li>
                 <li className="flex justify-between py-1">
                   <span>Taxes</span>
-                  <span>$9.99</span>
+                  <span>Calculated at checkout</span>
                 </li>
                 <li className="flex justify-between py-1">
                   <span>Estimated Shipping</span>
@@ -109,7 +119,7 @@ const CartSidebarView: FC = () => {
               </ul>
               <div className="flex justify-between border-t border-gray-300 py-3 font-bold mb-10">
                 <span>Total</span>
-                <span>$1320.23</span>
+                <span>{total}</span>
               </div>
             </div>
             <Button width="100%" onClick={() => openCheckout()}>
