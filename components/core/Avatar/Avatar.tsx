@@ -1,39 +1,21 @@
 import cn from 'classnames'
 import { FC } from 'react'
-import { random } from 'lodash'
-import { useState } from 'react'
+import s from './Avatar.module.css'
+
 interface Props {
   className?: string
   children?: any
 }
 
-function getRandomPairOfColors() {
-  const colors = ['#f33', '#7928ca', '#50e3c2', '#7928ca', '#7928CA']
-  const getRandomIdx = () => random(0, colors.length - 1)
-  let idx = getRandomIdx()
-  let idx2 = getRandomIdx()
-
-  // Has to be a different color
-  while (idx2 === idx) {
-    idx2 = getRandomIdx()
-  }
-
-  // Returns a pair of colors
-  return [colors[idx], colors[idx2]]
-}
-
-const Avatar: FC<Props> = ({}) => {
-  const [bg] = useState(getRandomPairOfColors)
-
+const Avatar: FC<Props> = ({ className }) => {
+  const rootClassName = cn(s.root, className)
   return (
-    <div
-      className="inline-block h-8 w-8 rounded-full border border-accent-8"
-      style={{
-        backgroundImage: `linear-gradient(140deg, ${bg[0]}, ${bg[1]} 100%)`,
-      }}
-    >
-      {/* Add an image - We're generating a gradient as placeholder 
-      <img></img> */}
+    <div className={rootClassName}>
+      <img
+        className="inline-block h-8 w-8 rounded-full"
+        src="https://vercel.com/api/www/avatar/61182a9f6bda512b4d9263c9c8a60aabe0402f4c?s=204"
+        alt=""
+      ></img>
     </div>
   )
 }
