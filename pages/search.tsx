@@ -114,7 +114,6 @@ export default function Home({
               />
             </>
           ) : (
-            // TODO: add a proper loading state
             <div>Searching...</div>
           )}
         </div>
