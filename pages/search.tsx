@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { GetStaticPropsContext, InferGetStaticPropsType } from 'next'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -7,13 +8,6 @@ import useSearch from '@lib/bigcommerce/products/use-search'
 import { Layout } from '@components/core'
 import { Container, Grid } from '@components/ui'
 import { ProductCard } from '@components/product'
-import {
-  filterQuery,
-  getCategoryPath,
-  getDesignerPath,
-  getSlug,
-  useSearchMeta,
-} from '@utils/search'
 
 export async function getStaticProps({ preview }: GetStaticPropsContext) {
   const { categories, brands } = await getSiteInfo()
@@ -23,14 +17,7 @@ export async function getStaticProps({ preview }: GetStaticPropsContext) {
   }
 }
 
-const SORT = Object.entries({
-  'latest-desc': 'Latest arrivals',
-  'trending-desc': 'Trending',
-  'price-asc': 'Price: Low to high',
-  'price-desc': 'Price: High to low',
-})
-
-export default function Search({
+export default function Home({
   categories,
   brands,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -38,8 +25,9 @@ export default function Search({
   const { asPath } = router
   const { q, sort } = router.query
   const query = filterQuery({ q, sort })
+  const pathname = asPath.split('?')[0]
 
-  const { pathname, category, brand } = useSearchMeta(asPath)
+  const { category, brand } = useSearchMeta(asPath)
   const activeCategory = categories.find(
     (cat) => getSlug(cat.path) === category
   )
@@ -51,7 +39,6 @@ export default function Search({
     search: typeof q === 'string' ? q : '',
     categoryId: activeCategory?.entityId,
     brandId: activeBrand?.entityId,
-    sort: typeof sort === 'string' ? sort : '',
   })
 
   return (
@@ -127,34 +114,62 @@ export default function Search({
               />
             </>
           ) : (
-            // TODO: add a proper loading state
             <div>Searching...</div>
           )}
         </div>
         <div className="col-span-2">
           <ul>
             <li className="py-1 text-primary font-bold tracking-wide">Sort</li>
-            <li
-              className={cn('py-1 text-default', {
-                underline: !sort,
-              })}
-            >
-              <Link href={{ pathname, query: filterQuery({ q }) }}>
+            <li className="py-1 text-default">
+              <Link
+                href={{
+                  pathname,
+                  query: filterQuery({ q }),
+                }}
+              >
                 <a>Relevance</a>
               </Link>
             </li>
-            {SORT.map(([key, text]) => (
-              <li
-                key={key}
-                className={cn('py-1 text-default', {
-                  underline: sort === key,
-                })}
+            <li className="py-1 text-default">
+              <Link
+                href={{
+                  pathname,
+                  query: filterQuery({ q, sort: 'latest-desc' }),
+                }}
               >
-                <Link href={{ pathname, query: filterQuery({ q, sort: key }) }}>
-                  <a>{text}</a>
-                </Link>
-              </li>
-            ))}
+                <a>Latest arrivals</a>
+              </Link>
+            </li>
+            <li className="py-1 text-default">
+              <Link
+                href={{
+                  pathname,
+                  query: filterQuery({ q, sort: 'trending-desc' }),
+                }}
+              >
+                <a>Trending</a>
+              </Link>
+            </li>
+            <li className="py-1 text-default">
+              <Link
+                href={{
+                  pathname,
+                  query: filterQuery({ q, sort: 'price-asc' }),
+                }}
+              >
+                <a>Price: Low to high</a>
+              </Link>
+            </li>
+            <li className="py-1 text-default">
+              <Link
+                href={{
+                  pathname,
+                  query: filterQuery({ q, sort: 'price-desc' }),
+                }}
+              >
+                <a>Price: High to low</a>
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
@@ -162,4 +177,48 @@ export default function Search({
   )
 }
 
-Search.Layout = Layout
+Home.Layout = Layout
+
+function useSearchMeta(asPath: string) {
+  const [category, setCategory] = useState<string | undefined>()
+  const [brand, setBrand] = useState<string | undefined>()
+
+  useEffect(() => {
+    const parts = asPath.split('/')
+
+    let c = parts[2]
+    let b = parts[3]
+
+    if (c === 'designers') {
+      c = parts[4]
+    }
+
+    if (c !== category) setCategory(c)
+    if (b !== brand) setBrand(b)
+  }, [asPath])
+
+  return { category, brand }
+}
+
+// Removes empty query parameters from the query object
+const filterQuery = (query: any) =>
+  Object.keys(query).reduce<any>((obj, key) => {
+    if (query[key]?.length) {
+      obj[key] = query[key]
+    }
+    return obj
+  }, {})
+
+// Remove trailing and leading slash
+const getSlug = (path: string) => path.replace(/^\/|\/$/g, '')
+
+const getCategoryPath = (slug: string, brand?: string) =>
+  `/search${brand ? `/designers/${brand}` : ''}${slug ? `/${slug}` : ''}`
+
+const getDesignerPath = (slug: string, category?: string) => {
+  const designer = slug.replace(/^brands/, 'designers')
+
+  return `/search${designer ? `/${designer}` : ''}${
+    category ? `/${category}` : ''
+  }`
+}
