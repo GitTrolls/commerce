@@ -5,41 +5,51 @@ import { Colors } from '@components/ui/types'
 import { Check } from '@components/icon'
 import Button, { ButtonProps } from '@components/ui/Button'
 
-interface Props extends ButtonProps {
-  className?: string
-  children?: any
+interface Props {
   active?: boolean
-  color?: Colors
-  size?: string
+  children?: any
+  className?: string
+  label?: string
+  variant?: 'size' | 'color' | string
+  color?: string
 }
 
-const Swatch: FC<Props> = ({ className, size, color, active, ...props }) => {
+const Swatch: FC<Props & ButtonProps> = ({
+  className,
+  color,
+  label,
+  variant = 'size',
+  active,
+  ...props
+}) => {
+  variant = variant?.toLowerCase()
+  label = label?.toLowerCase()
+  console.log(variant)
   const rootClassName = cn(
     s.root,
     {
       [s.active]: active,
-      [s.size]: size,
-      [s.colorPink]: color === 'pink',
-      [s.colorWhite]: color === 'white',
-      [s.colorBlack]: color === 'black',
-      [s.colorViolet]: color === 'violet',
+      [s.size]: variant === 'size',
     },
     className
   )
 
   return (
-    <Button className={rootClassName} {...props}>
-      {color && active && (
+    <Button
+      className={rootClassName}
+      style={color ? { backgroundColor: color } : {}}
+    >
+      {variant === 'color' && active && (
         <span
           className={cn('absolute', {
-            'text-white': color !== 'white',
-            'text-black': color === 'white',
+            'text-white': label !== 'white',
+            'text-black': label === 'white',
           })}
         >
           <Check />
         </span>
       )}
-      {size}
+      {variant === 'size' ? label : null}
     </Button>
   )
 }
