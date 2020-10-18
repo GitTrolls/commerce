@@ -8,7 +8,7 @@ interface Props {
   className?: string
   children?: ReactNode[] | Component[] | any[]
   node: ProductData
-  variant?: 'slim' | 'simple'
+  variant?: 'slim'
 }
 
 interface ProductData {
@@ -23,7 +23,7 @@ const ProductCard: FC<Props> = ({ className, node: p, variant }) => {
     return (
       <div className="relative overflow-hidden box-border">
         <img
-          className="object-scale-down h-24"
+          className="object-scale-down h-48"
           src={p.images.edges[0].node.urlSmall}
         />
         <div className="absolute inset-0 flex items-center justify-end mr-8">
@@ -44,12 +44,12 @@ const ProductCard: FC<Props> = ({ className, node: p, variant }) => {
             src={p.images.edges[0].node.urlXL}
           />
         </div>
-        <div className={cn(s.squareBg, { [s.gray]: variant === 'simple' })} />
+        <div className={s.squareBg} />
         <div className="flex flex-row justify-between box-border w-full z-10 relative">
           <div className="">
-            <p className={s.productTitle}>
+            <div className={s.productTitle}>
               <span>{p.name}</span>
-            </p>
+            </div>
             <span className={s.productPrice}>${p.prices.price.value}</span>
           </div>
           <div className={s.wishlistButton}>
