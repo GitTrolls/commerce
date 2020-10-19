@@ -13,7 +13,7 @@ import { LoadingDots } from '@components/ui'
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   href?: string
   className?: string
-  variant?: 'flat' | 'slim'
+  variant?: 'filled' | 'outlined' | 'flat' | 'none'
   active?: boolean
   type?: 'submit' | 'reset' | 'button'
   Component?: string | JSXElementConstructor<any>
@@ -24,7 +24,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Button: React.FC<ButtonProps> = forwardRef((props, buttonRef) => {
   const {
     className,
-    variant = 'flat',
+    variant = 'filled',
     children,
     active,
     onClick,
@@ -50,7 +50,6 @@ const Button: React.FC<ButtonProps> = forwardRef((props, buttonRef) => {
   const rootClassName = cn(
     s.root,
     {
-      [s.slim]: variant === 'slim',
       [s.loading]: loading,
     },
     className
@@ -58,16 +57,16 @@ const Button: React.FC<ButtonProps> = forwardRef((props, buttonRef) => {
 
   return (
     <Component
+      className={rootClassName}
       aria-pressed={active}
       data-variant={variant}
       ref={mergeRefs([ref, buttonRef])}
       {...buttonProps}
-      data-active={isPressed ? '' : undefined}
-      className={rootClassName}
       style={{
         width,
         ...style,
       }}
+      data-active={isPressed ? '' : undefined}
     >
       {children}
       {loading && (
