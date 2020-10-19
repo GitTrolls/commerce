@@ -1,4 +1,7 @@
-import getAllProducts, { ProductEdge } from '../../operations/get-all-products'
+import getAllProducts, {
+  Products,
+  Product,
+} from '../../operations/get-all-products'
 import type { ProductsHandlers } from '../products'
 
 const SORT: { [key: string]: string | undefined } = {
@@ -51,13 +54,14 @@ const getProducts: ProductsHandlers['getProducts'] = async ({
     variables: { first: LIMIT, entityIds },
   })
   // Put the products in an object that we can use to get them by id
-  const productsById = graphqlData.products.reduce<{
-    [k: number]: ProductEdge
-  }>((prods, p) => {
-    prods[p.node.entityId] = p
-    return prods
-  }, {})
-  const products: ProductEdge[] = found ? [] : graphqlData.products
+  const productsById = graphqlData.products.reduce<{ [k: number]: Product }>(
+    (prods, p) => {
+      prods[p.node.entityId] = p
+      return prods
+    },
+    {}
+  )
+  const products: Products = found ? [] : graphqlData.products
 
   // Populate the products array with the graphql products, in the order
   // assigned by the list of entity ids

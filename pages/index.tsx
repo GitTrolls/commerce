@@ -28,13 +28,13 @@ export default function Home({
   return (
     <div className="mt-3">
       <Grid>
-        {featuredProducts.map(({ node }) => (
-          <ProductCard key={node.path} product={node} />
+        {featuredProducts.slice(0, 3).map((p: any) => (
+          <ProductCard key={p.id} {...p} />
         ))}
       </Grid>
       <Marquee variant="secondary">
-        {products.slice(0, 3).map(({ node }) => (
-          <ProductCard key={node.path} product={node} variant="slim" />
+        {products.slice(0, 3).map((p: any) => (
+          <ProductCard key={p.id} {...p} variant="slim" />
         ))}
       </Marquee>
       <Hero
@@ -48,13 +48,13 @@ export default function Home({
         ‘Natural’."
       />
       <Grid layout="B">
-        {products.slice(3, 6).map(({ node }) => (
-          <ProductCard key={node.path} product={node} />
+        {featuredProducts.slice(3, 6).map((p: any) => (
+          <ProductCard key={p.id} {...p} />
         ))}
       </Grid>
       <Marquee>
-        {products.slice(0, 3).map(({ node }) => (
-          <ProductCard key={node.path} product={node} variant="slim" />
+        {products.slice(3, 6).map((p: any) => (
+          <ProductCard key={p.id} {...p} variant="slim" />
         ))}
       </Marquee>
       <div className="py-12 flex flex-row w-full px-12">
@@ -84,8 +84,8 @@ export default function Home({
         </div>
         <div className="flex-1">
           <Grid layout="normal">
-            {products.map(({ node }) => (
-              <ProductCard key={node.path} product={node} variant="simple" />
+            {products.map((p: any) => (
+              <ProductCard key={p.id} {...p} variant="simple" />
             ))}
           </Grid>
         </div>
