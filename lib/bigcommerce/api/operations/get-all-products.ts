@@ -1,7 +1,7 @@
 import type {
   GetAllProductsQuery,
   GetAllProductsQueryVariables,
-} from '@lib/bigcommerce/schema'
+} from 'lib/bigcommerce/schema'
 import type { RecursivePartial, RecursiveRequired } from '../utils/types'
 import filterEdges from '../utils/filter-edges'
 import { productConnectionFragment } from '../fragments/product'
@@ -43,16 +43,14 @@ export const getAllProductsQuery = /* GraphQL */ `
   ${productConnectionFragment}
 `
 
-export type ProductEdge = NonNullable<
+export type Product = NonNullable<
   NonNullable<GetAllProductsQuery['site']['products']['edges']>[0]
 >
 
-export type ProductNode = ProductEdge['node']
+export type Products = Product[]
 
 export type GetAllProductsResult<
-  T extends Record<keyof GetAllProductsResult, any[]> = {
-    products: ProductEdge[]
-  }
+  T extends Record<keyof GetAllProductsResult, any[]> = { products: Products }
 > = T
 
 const FIELDS = [
