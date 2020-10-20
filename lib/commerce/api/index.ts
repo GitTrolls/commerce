@@ -14,4 +14,8 @@ export interface CommerceAPIFetchOptions<V> {
   preview?: boolean
 }
 
-// TODO: define interfaces for all the available operations and API endpoints
+// TODO: define interfaces for all the available operations
+
+// export interface CommerceAPI {
+//   getAllProducts(options?: { query: string }): Promise<any>;
+// }
