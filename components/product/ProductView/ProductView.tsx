@@ -1,17 +1,17 @@
 import { NextSeo } from 'next-seo'
 import { FC, useState } from 'react'
-import type { ProductNode } from '@lib/bigcommerce/api/operations/get-product'
+import s from './ProductView.module.css'
 import { useUI } from '@components/ui/context'
 import { Button, Container } from '@components/ui'
 import { Swatch, ProductSlider } from '@components/product'
 import useAddItem from '@lib/bigcommerce/cart/use-add-item'
+import type { Product } from '@lib/bigcommerce/api/operations/get-product'
 import { getProductOptions } from '../helpers'
-import s from './ProductView.module.css'
 
 interface Props {
   className?: string
   children?: any
-  product: ProductNode
+  product: Product
 }
 
 const ProductView: FC<Props> = ({ product, className }) => {

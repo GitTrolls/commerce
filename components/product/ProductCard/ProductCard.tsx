@@ -1,24 +1,30 @@
 import cn from 'classnames'
 import s from './ProductCard.module.css'
 import { FC, ReactNode, Component } from 'react'
-import type { ProductNode } from '@lib/bigcommerce/api/operations/get-all-products'
 import { Heart } from '@components/icon'
 import Link from 'next/link'
 
 interface Props {
   className?: string
   children?: ReactNode[] | Component[] | any[]
-  product: ProductNode
+  node: ProductData
   variant?: 'slim' | 'simple'
 }
 
-const ProductCard: FC<Props> = ({ className, product: p, variant }) => {
+interface ProductData {
+  name: string
+  images: any
+  prices: any
+  path: string
+}
+
+const ProductCard: FC<Props> = ({ className, node: p, variant }) => {
   if (variant === 'slim') {
     return (
       <div className="relative overflow-hidden box-border">
         <img
           className="object-scale-down h-48"
-          src={p.images.edges?.[0]?.node.urlSmall}
+          src={p.images.edges[0].node.urlSmall}
         />
         <div className="absolute inset-0 flex items-center justify-end mr-8">
           <span className="bg-black text-white inline-block p-3 font-bold text-xl break-words">
@@ -35,7 +41,7 @@ const ProductCard: FC<Props> = ({ className, product: p, variant }) => {
         <div className="absolute z-10 inset-0 flex items-center justify-center">
           <img
             className="w-full object-cover"
-            src={p.images.edges?.[0]?.node.urlXL}
+            src={p.images.edges[0].node.urlXL}
           />
         </div>
         <div className={cn(s.squareBg, { [s.gray]: variant === 'simple' })} />
@@ -44,7 +50,7 @@ const ProductCard: FC<Props> = ({ className, product: p, variant }) => {
             <p className={s.productTitle}>
               <span>{p.name}</span>
             </p>
-            <span className={s.productPrice}>${p.prices?.price.value}</span>
+            <span className={s.productPrice}>${p.prices.price.value}</span>
           </div>
           <div className={s.wishlistButton}>
             <Heart />

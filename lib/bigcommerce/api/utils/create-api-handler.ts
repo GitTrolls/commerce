@@ -27,7 +27,7 @@ export type BigcommerceHandlers<T = any> = {
 
 export type BigcommerceApiResponse<T> = {
   data: T | null
-  errors?: { message: string; code?: string }[]
+  errors?: { message: string }[]
 }
 
 export default function createApiHandler<
