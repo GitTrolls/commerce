@@ -1,6 +1,5 @@
 import { BigcommerceApiError } from '../../utils/errors'
-import login from '../../operations/login'
-import type { CustomersHandlers } from '..'
+import { CustomersHandlers } from '..'
 
 const createCustomer: CustomersHandlers['createCustomer'] = async ({
   res,
@@ -18,10 +17,8 @@ const createCustomer: CustomersHandlers['createCustomer'] = async ({
   // Passwords must be at least 7 characters and contain both alphabetic
   // and numeric characters.
 
-  let result: { data?: any } = {}
-
   try {
-    result = await config.storeApiFetch('/v3/customers', {
+    const { data } = await config.storeApiFetch('/v3/customers', {
       method: 'POST',
       body: JSON.stringify([
         {
@@ -34,6 +31,8 @@ const createCustomer: CustomersHandlers['createCustomer'] = async ({
         },
       ]),
     })
+
+    res.status(200).json({ data })
   } catch (error) {
     if (error instanceof BigcommerceApiError && error.status === 422) {
       const hasEmailError = '0.email' in error.data?.errors
@@ -54,14 +53,6 @@ const createCustomer: CustomersHandlers['createCustomer'] = async ({
 
     throw error
   }
-
-  console.log('DATA', result.data)
-
-  const loginData = await login({ variables: { email, password }, config })
-
-  console.log('LOGIN DATA', loginData)
-
-  res.status(200).json({ data: result.data ?? null })
 }
 
 export default createCustomer
