@@ -4,7 +4,6 @@ import Link from 'next/link'
 import type { Page } from '@lib/bigcommerce/api/operations/get-all-pages'
 import getSlug from '@utils/get-slug'
 import { Logo } from '@components/ui'
-import s from './Footer.module.css'
 
 interface Props {
   className?: string
@@ -37,7 +36,7 @@ const Footer: FC<Props> = ({ className, pages }) => {
           {sitePages.map((page) => (
             <li key={page.url} className="py-3 md:py-0 md:pb-4">
               <Link href={page.url!}>
-                <a className="text-gray-400 hover:text-white transition ease-in-out duration-150">
+                <a className="text-gray-400 hover:text-white transition ease-in-out duration-100">
                   {page.name}
                 </a>
               </Link>
@@ -49,7 +48,7 @@ const Footer: FC<Props> = ({ className, pages }) => {
           {legalPages.map((page) => (
             <li key={page.url} className="py-3 md:py-0 md:pb-4">
               <Link href={page.url!}>
-                <a className="text-gray-400 hover:text-white transition ease-in-out duration-150">
+                <a className="text-gray-400 hover:text-white transition ease-in-out duration-100">
                   {page.name}
                 </a>
               </Link>
@@ -57,7 +56,7 @@ const Footer: FC<Props> = ({ className, pages }) => {
           ))}
         </ul>
 
-        <small className={cn('text-white', s.copyright)}>
+        <small className="text-base">
           &copy; 2020 ACME, Inc. All rights reserved.
         </small>
       </footer>

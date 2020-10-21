@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 import cn from 'classnames'
 import useCart from '@lib/bigcommerce/cart/use-cart'
 import { Avatar } from '@components/core'
@@ -21,30 +21,6 @@ const UserNav: FC<Props> = ({ className }) => {
   const { openSidebar, closeSidebar, displaySidebar } = useUI()
   const itemsCount = Object.values(data?.line_items ?? {}).reduce(countItems, 0)
 
-  useEffect(() => {
-    function handleClick(e: any) {
-      const isInside = e?.target?.closest(`#user-dropdown`) !== null
-      if (isInside) return
-      setDisplayDropdown(false)
-      document.removeEventListener('click', handleClick)
-    }
-    function handleKeyPress(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        setDisplayDropdown(false)
-        document.removeEventListener('keydown', handleKeyPress)
-      }
-    }
-
-    if (displayDropdown) {
-      document.addEventListener('click', handleClick)
-      document.addEventListener('keydown', handleKeyPress)
-      return () => {
-        document.removeEventListener('click', handleClick)
-        document.removeEventListener('keydown', handleKeyPress)
-      }
-    }
-  }, [displayDropdown])
-
   return (
     <nav className={cn(s.root, className)}>
       <ul className={s.list}>
@@ -64,21 +40,18 @@ const UserNav: FC<Props> = ({ className }) => {
             <Heart />
           </li>
         </Link>
-        <button
-          className={cn(
-            s.item,
-            'rounded-full focus:shadow-outline-blue focus:outline-none'
-          )}
+        <li
+          className={s.item}
           onClick={() => {
             setDisplayDropdown((i) => !i)
           }}
         >
           <Avatar />
-        </button>
+        </li>
       </ul>
 
       {displayDropdown && (
-        <div className={cn(s.dropdownMenu, 'shadow-lg')} id="user-dropdown">
+        <div className={s.dropdownMenu}>
           <nav className={s.dropdownMenuContainer}>
             <Link href="#">
               <a className={s.link}>My Purchases</a>
@@ -86,9 +59,8 @@ const UserNav: FC<Props> = ({ className }) => {
             <Link href="#">
               <a className={s.link}>My Account</a>
             </Link>
-            <div className="my-1 h-px w-full bg-accents-2" />
             <Link href="#">
-              <a className={cn(s.link)}>Logout</a>
+              <a className={cn(s.link, 'mt-4')}>Logout</a>
             </Link>
           </nav>
         </div>
