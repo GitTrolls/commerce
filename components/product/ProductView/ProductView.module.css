@@ -37,9 +37,7 @@
   @apply absolute top-6 left-0 z-50;
 
   & .name {
-    @apply px-6 py-2 bg-primary text-primary font-bold;
-    font-size: 2rem;
-    letter-spacing: 0.4px;
+    @apply px-6 py-2 bg-primary text-primary font-bold text-3xl;
   }
 
   & .price {

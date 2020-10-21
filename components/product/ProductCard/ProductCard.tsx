@@ -31,21 +31,19 @@ const ProductCard: FC<Props> = ({ className, product: p, variant }) => {
 
   return (
     <Link href={`product${p.path}`}>
-      <a
-        className={cn(s.root, { [s.simple]: variant === 'simple' }, className)}
-      >
+      <a className={cn(s.root, className)}>
         <div className="absolute z-10 inset-0 flex items-center justify-center">
           <img
             className="w-full object-cover"
             src={p.images.edges?.[0]?.node.urlXL}
           />
         </div>
-        <div className={s.squareBg} />
+        <div className={cn(s.squareBg, { [s.gray]: variant === 'simple' })} />
         <div className="flex flex-row justify-between box-border w-full z-10 relative">
-          <div className="absolute top-0 left-0">
-            <h3 className={s.productTitle}>
+          <div className="">
+            <p className={s.productTitle}>
               <span>{p.name}</span>
-            </h3>
+            </p>
             <span className={s.productPrice}>${p.prices?.price.value}</span>
           </div>
           <div className={s.wishlistButton}>
