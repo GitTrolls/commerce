@@ -44,8 +44,10 @@ export type Wishlist = {
   // TODO: add missing fields
 }
 
+export type WishlistList = Wishlist[]
+
 export type WishlistHandlers = {
-  getAllWishlists: BigcommerceHandler<Wishlist[], { customerId?: string }>
+  getAllWishlists: BigcommerceHandler<WishlistList, { customerId?: string }>
   getWishlist: BigcommerceHandler<Wishlist, { wishlistId?: string }>
   addWishlist: BigcommerceHandler<
     Wishlist,
