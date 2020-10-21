@@ -28,8 +28,8 @@ export const fetcher: HookFetcher<Cart | null, UpdateItemBody> = (
   }
 
   return fetch({
-    ...defaultOpts,
-    ...options,
+    url: options?.url ?? defaultOpts.url,
+    method: options?.method ?? defaultOpts.method,
     body: { itemId, item },
   })
 }
