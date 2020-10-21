@@ -38,7 +38,7 @@ const customersApi: BigcommerceApiHandler<Customer, CustomersHandlers> = async (
 
   try {
     if (req.method === 'POST') {
-      const body = { ...req.body, cartId }
+      const body = { cartId, ...req.body }
       return await handlers['createCustomer']({ req, res, config, body })
     }
   } catch (error) {
