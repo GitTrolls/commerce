@@ -4,32 +4,26 @@ import createApiHandler, {
 } from '../utils/create-api-handler'
 import isAllowedMethod from '../utils/is-allowed-method'
 import { BigcommerceApiError } from '../utils/errors'
-import createCustomer from './handlers/create-customer'
+import signup from './handlers/signup'
 
-type Body<T> = Partial<T> | undefined
-
-export type Customer = null
-
-export type CreateCustomerBody = {
+export type SignupBody = {
   firstName: string
   lastName: string
   email: string
   password: string
 }
 
-export type CustomersHandlers = {
-  createCustomer: BigcommerceHandler<
-    Customer,
-    { cartId?: string } & Body<CreateCustomerBody>
-  >
+export type SignupHandlers = {
+  signup: BigcommerceHandler<null, { cartId?: string } & Partial<SignupBody>>
 }
 
 const METHODS = ['POST']
 
-const customersApi: BigcommerceApiHandler<Customer, CustomersHandlers> = async (
+const signupApi: BigcommerceApiHandler<null, SignupHandlers> = async (
   req,
   res,
-  config
+  config,
+  handlers
 ) => {
   if (!isAllowedMethod(req, res, METHODS)) return
 
@@ -37,10 +31,8 @@ const customersApi: BigcommerceApiHandler<Customer, CustomersHandlers> = async (
   const cartId = cookies[config.cartCookie]
 
   try {
-    if (req.method === 'POST') {
-      const body = { ...req.body, cartId }
-      return await handlers['createCustomer']({ req, res, config, body })
-    }
+    const body = { ...req.body, cartId }
+    return await handlers['signup']({ req, res, config, body })
   } catch (error) {
     console.error(error)
 
@@ -53,6 +45,6 @@ const customersApi: BigcommerceApiHandler<Customer, CustomersHandlers> = async (
   }
 }
 
-const handlers = { createCustomer }
+const handlers = { signup }
 
-export default createApiHandler(customersApi, handlers, {})
+export default createApiHandler(signupApi, handlers, {})
