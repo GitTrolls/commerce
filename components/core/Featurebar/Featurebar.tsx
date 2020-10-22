@@ -1,5 +1,6 @@
 import cn from 'classnames'
 import { FC } from 'react'
+import s from './Featurebar.module.css'
 
 interface Props {
   className?: string
@@ -17,16 +18,15 @@ const Featurebar: FC<Props> = ({
   hide,
 }) => {
   const rootClassName = cn(
-    'transition-transform transform duration-500 text-center ease-out p-6 bg-primary text-base text-sm md:flex md:text-left flex-row justify-center items-center font-medium fixed bottom-0 w-full z-10',
+    'transition-transform transform duration-500 ease-out p-6 bg-primary text-base text-sm md:flex flex-row justify-center items-center font-medium fixed bottom-0 w-full z-10',
     { 'translate-y-full': hide },
     className
   )
   return (
     <div className={rootClassName}>
-      <span className="block md:inline">{title}</span>
-      <span className="block mb-6 md:inline md:mb-0 md:ml-2">
-        {description}
-      </span>
+      <span>{title}</span>
+      <span className={s.separator} />
+      <span>{description}</span>
       {action && action}
     </div>
   )
