@@ -1,21 +1,18 @@
-import type { GraphQLFetcher } from 'lib/commerce/api'
+import { CommerceAPIFetchOptions } from 'lib/commerce/api'
 import { getConfig } from '..'
 import log from '@lib/logger'
 
-const fetchGraphqlApi: GraphQLFetcher = async (
+export default async function fetchGraphqlApi<Q, V = any>(
   query: string,
-  { variables, preview } = {},
-  fetchOptions
-) => {
+  { variables, preview }: CommerceAPIFetchOptions<V> = {}
+): Promise<Q> {
   // log.warn(query)
   const config = getConfig()
   const res = await fetch(config.commerceUrl + (preview ? '/preview' : ''), {
-    ...fetchOptions,
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${config.apiToken}`,
-      ...fetchOptions?.headers,
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${config.apiToken}`,
     },
     body: JSON.stringify({
       query,
@@ -23,13 +20,22 @@ const fetchGraphqlApi: GraphQLFetcher = async (
     }),
   })
 
+  // console.log('HEADERS', getRawHeaders(res))
+
   const json = await res.json()
   if (json.errors) {
     console.error(json.errors)
     throw new Error('Failed to fetch BigCommerce API')
   }
-
-  return { data: json.data, res }
+  return json.data
 }
 
-export default fetchGraphqlApi
+function getRawHeaders(res: Response) {
+  const headers: { [key: string]: string } = {}
+
+  res.headers.forEach((value, key) => {
+    headers[key] = value
+  })
+
+  return headers
+}
