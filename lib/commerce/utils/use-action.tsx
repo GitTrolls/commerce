@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import type { HookFetcher, HookFetcherOptions } from './types'
 import { useCommerce } from '..'
 
-export default function useAction<T, Input = null>(
+export default function useAction<T, Input>(
   options: HookFetcherOptions,
   fetcher: HookFetcher<T, Input>
 ) {

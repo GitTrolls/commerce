@@ -66,12 +66,9 @@ if (!(STORE_API_URL && STORE_API_TOKEN && STORE_API_CLIENT_ID)) {
 export class Config {
   private config: BigcommerceConfig
 
-  constructor(config: Omit<BigcommerceConfigOptions, 'customerCookie'>) {
+  constructor(config: BigcommerceConfigOptions) {
     this.config = {
       ...config,
-      // The customerCookie is not customizable for now, BC sets the cookie and it's
-      // not important to rename it
-      customerCookie: 'SHOP_TOKEN',
       imageVariables: this.getImageVariables(config.images),
     }
   }
