@@ -1,8 +1,5 @@
-import { FetcherError } from '@lib/commerce/utils/errors'
 import login from '../../operations/login'
 import type { LoginHandlers } from '../login'
-
-const invalidCredentials = /invalid credentials/i
 
 const loginHandler: LoginHandlers['login'] = async ({
   res,
@@ -20,28 +17,8 @@ const loginHandler: LoginHandlers['login'] = async ({
   // Passwords must be at least 7 characters and contain both alphabetic
   // and numeric characters.
 
-  try {
-    await login({ variables: { email, password }, config, res })
-  } catch (error) {
-    // Check if the email and password didn't match an existing account
-    if (
-      error instanceof FetcherError &&
-      invalidCredentials.test(error.message)
-    ) {
-      return res.status(401).json({
-        data: null,
-        errors: [
-          {
-            message:
-              'Cannot find an account that matches the provided credentials',
-            code: 'invalid_credentials',
-          },
-        ],
-      })
-    }
-
-    throw error
-  }
+  // TODO: Currently not working, fix this asap.
+  const loginData = await login({ variables: { email, password }, config })
 
   res.status(200).json({ data: null })
 }
