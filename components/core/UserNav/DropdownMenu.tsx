@@ -4,36 +4,21 @@ import { useTheme } from 'next-themes'
 import cn from 'classnames'
 import s from './DropdownMenu.module.css'
 import { Moon, Sun } from '@components/icon'
-import { Menu, Transition } from '@headlessui/react'
-import { usePreventScroll } from '@react-aria/overlays'
+import { Menu } from '@headlessui/react'
 interface DropdownMenuProps {
   onClose: () => void
-  open: boolean
 }
 
 const DropdownMenu: FC<DropdownMenuProps> = ({
   onClose,
   children,
-  open = false,
+
   ...props
 }) => {
   const { theme, setTheme } = useTheme()
-
-  usePreventScroll({
-    isDisabled: !open,
-  })
-
   return (
-    <Transition
-      show={open}
-      enter="transition ease-out duration-100 z-20"
-      enterFrom="transform opacity-0 scale-95"
-      enterTo="transform opacity-100 scale-100"
-      leave="transition ease-in duration-75"
-      leaveFrom="transform opacity-100 scale-100"
-      leaveTo="transform opacity-0 scale-95"
-    >
-      <Menu.Items className={s.dropdownMenu}>
+    <nav className={cn(s.dropdownMenu)}>
+      <Menu.Items className={s.dropdownMenuContainer}>
         <Menu.Item>
           {({ active }) => <a className={s.link}>My Purchases</a>}
         </Menu.Item>
@@ -69,7 +54,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
           )}
         </Menu.Item>
       </Menu.Items>
-    </Transition>
+    </nav>
   )
 }
 
