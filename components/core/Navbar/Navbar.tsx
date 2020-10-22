@@ -1,6 +1,7 @@
 import s from './Navbar.module.css'
 import { FC } from 'react'
 import Link from 'next/link'
+import { useTheme } from 'next-themes'
 import { Logo } from '@components/ui'
 import { Searchbar, UserNav } from '@components/core'
 interface Props {
