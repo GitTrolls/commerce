@@ -3,7 +3,6 @@ export interface CommerceAPIConfig {
   apiToken: string
   cartCookie: string
   cartCookieMaxAge: number
-  customerCookie: string
   fetch<Data = any, Variables = any>(
     query: string,
     queryData?: CommerceAPIFetchOptions<Variables>,
