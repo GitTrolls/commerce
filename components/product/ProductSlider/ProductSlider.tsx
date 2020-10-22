@@ -1,61 +1,36 @@
-import { ArrowLeft } from '@components/icon'
-import { useKeenSlider } from 'keen-slider/react'
-import React, { Children, FC, isValidElement, useState } from 'react'
-import cn from 'classnames'
-
+import React, { FC, useState } from 'react'
+import SwipeableViews from 'react-swipeable-views'
 import s from './ProductSlider.module.css'
+interface Props {
+  children?: any
+}
 
-const ProductSlider: FC = ({ children }) => {
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [ref, slider] = useKeenSlider<HTMLDivElement>({
-    slideChanged(s) {
-      setCurrentSlide(s.details().relativeSlide)
-    },
-    loop: true,
-  })
+const ProductSlider: FC<Props> = ({ children }) => {
+  const [idx, setIdx] = useState(0)
+  const count = React.Children.count(children)
+
+  const goBack = () => {
+    idx !== 0 ? setIdx(idx - 1) : setIdx(count - 1)
+  }
+
+  const goNext = () => {
+    idx + 1 === count ? setIdx(0) : setIdx(idx + 1)
+  }
 
   return (
     <div className={s.root}>
-      <button className={cn(s.leftControl, s.control)} onClick={slider?.prev}>
-        <ArrowLeft />
-      </button>
-      <button className={cn(s.rightControl, s.control)} onClick={slider?.next}>
-        <ArrowLeft />
-      </button>
-      <div ref={ref} className="keen-slider h-full">
-        {Children.map(children, (child) => {
-          // Add the keen-slider__slide className to children
-          if (isValidElement(child)) {
-            return {
-              ...child,
-              props: {
-                ...child.props,
-                className: `${
-                  child.props.className ? `${child.props.className} ` : ''
-                }keen-slider__slide`,
-              },
-            }
-          }
-          return child
-        })}
+      <SwipeableViews
+        index={idx}
+        onChangeIndex={setIdx}
+        containerStyle={{ overflow: 'visible' }}
+        slideStyle={{ overflow: 'visible' }}
+      >
+        {children}
+      </SwipeableViews>
+      <div className={s.rootPanel}>
+        <div className={s.leftPanel} onClick={goBack}></div>
+        <div className={s.rightPanel} onClick={goNext}></div>
       </div>
-      {slider && (
-        <div className={cn(s.positionIndicatorsContainer)}>
-          {[...Array(slider.details().size).keys()].map((idx) => {
-            return (
-              <button
-                key={idx}
-                className={cn(s.positionIndicator, {
-                  [s.positionIndicatorActive]: currentSlide === idx,
-                })}
-                onClick={() => {
-                  slider.moveToSlideRelative(idx)
-                }}
-              />
-            )
-          })}
-        </div>
-      )}
     </div>
   )
 }
