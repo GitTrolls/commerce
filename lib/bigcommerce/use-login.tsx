@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
-import type { HookFetcher } from '@lib/commerce/utils/types'
-import { CommerceError } from '@lib/commerce/utils/errors'
+import { HookFetcher } from '@lib/commerce/utils/types'
 import useCommerceLogin from '@lib/commerce/use-login'
 import type { LoginBody } from './api/customers/login'
 
@@ -17,10 +16,9 @@ export const fetcher: HookFetcher<null, LoginBody> = (
   fetch
 ) => {
   if (!(email && password)) {
-    throw new CommerceError({
-      message:
-        'A first name, last name, email and password are required to login',
-    })
+    throw new Error(
+      'A first name, last name, email and password are required to login'
+    )
   }
 
   return fetch({
