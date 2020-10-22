@@ -1,4 +1,4 @@
-const DoubleChevron = ({ ...props }) => {
+const Sun = ({ ...props }) => {
   return (
     <svg
       width="24"
@@ -19,4 +19,4 @@ const DoubleChevron = ({ ...props }) => {
   )
 }
 
-export default DoubleChevron
+export default Sun

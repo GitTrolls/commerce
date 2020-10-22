@@ -6,9 +6,6 @@ module.exports = {
   purge: ['./components/**/*.{js,ts,jsx,tsx}', './pages/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      maxWidth: {
-        '8xl': '1920px',
-      },
       backgroundOpacity: {
         075: '0.75',
       },
@@ -29,7 +26,6 @@ module.exports = {
         'accents-8': 'var(--accents-8)',
         'accents-9': 'var(--accents-9)',
         violet: 'var(--violet)',
-        'violet-light': 'var(--violet-light)',
         pink: 'var(--pink)',
         cyan: 'var(--cyan)',
         blue: 'var(--blue)',
