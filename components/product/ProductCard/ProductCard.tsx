@@ -1,46 +1,30 @@
-import { FC, ReactNode, Component } from 'react'
 import cn from 'classnames'
-import Image from 'next/image'
-import Link from 'next/link'
-import type { ProductNode } from '@lib/bigcommerce/api/operations/get-all-products'
-import getPathname from '@lib/get-pathname'
-import { Heart } from '@components/icon'
 import s from './ProductCard.module.css'
+import { FC, ReactNode, Component } from 'react'
+import type { ProductNode } from '@lib/bigcommerce/api/operations/get-all-products'
+import { Heart } from '@components/icon'
+import Link from 'next/link'
 
 interface Props {
   className?: string
   children?: ReactNode[] | Component[] | any[]
   product: ProductNode
   variant?: 'slim' | 'simple'
-  imgWidth: number
-  imgHeight: number
-  priority?: boolean
 }
 
-const ProductCard: FC<Props> = ({
-  className,
-  product: p,
-  variant,
-  imgWidth,
-  imgHeight,
-  priority,
-}) => {
-  const src = getPathname(p.images.edges?.[0]?.node.urlOriginal!)
-
+const ProductCard: FC<Props> = ({ className, product: p, variant }) => {
   if (variant === 'slim') {
     return (
       <div className="relative overflow-hidden box-border">
+        <img
+          className="object-scale-down h-48"
+          src={p.images.edges?.[0]?.node.urlSmall}
+        />
         <div className="absolute inset-0 flex items-center justify-end mr-8">
           <span className="bg-black text-white inline-block p-3 font-bold text-xl break-words">
             {p.name}
           </span>
         </div>
-        <Image
-          src={src}
-          width={imgWidth}
-          height={imgHeight}
-          priority={priority}
-        />
       </div>
     )
   }
@@ -50,8 +34,14 @@ const ProductCard: FC<Props> = ({
       <a
         className={cn(s.root, { [s.simple]: variant === 'simple' }, className)}
       >
+        <div className="absolute z-10 inset-0 flex items-center justify-center">
+          <img
+            className="w-full object-cover"
+            src={p.images.edges?.[0]?.node.urlXL}
+          />
+        </div>
         <div className={s.squareBg} />
-        <div className="flex flex-row justify-between box-border w-full z-10 absolute">
+        <div className="flex flex-row justify-between box-border w-full z-10 relative">
           <div className="absolute top-0 left-0">
             <h3 className={s.productTitle}>
               <span>{p.name}</span>
@@ -62,12 +52,6 @@ const ProductCard: FC<Props> = ({
             <Heart />
           </div>
         </div>
-        <Image
-          src={src}
-          width={imgWidth}
-          height={imgHeight}
-          priority={priority}
-        />
       </a>
     </Link>
   )
