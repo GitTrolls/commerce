@@ -4,7 +4,6 @@ import {
   CommerceProvider as CoreCommerceProvider,
   useCommerce as useCoreCommerce,
 } from 'lib/commerce'
-import { FetcherError } from '@lib/commerce/utils/errors'
 
 async function getText(res: Response) {
   try {
@@ -17,9 +16,9 @@ async function getText(res: Response) {
 async function getError(res: Response) {
   if (res.headers.get('Content-Type')?.includes('application/json')) {
     const data = await res.json()
-    return new FetcherError({ errors: data.errors, status: res.status })
+    return data.errors[0]
   }
-  return new FetcherError({ message: await getText(res), status: res.status })
+  return { message: await getText(res) }
 }
 
 export const bigcommerceConfig: CommerceConfig = {

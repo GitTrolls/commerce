@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
-import { CommerceError } from '@lib/commerce/utils/errors'
-import type { HookFetcher } from '@lib/commerce/utils/types'
+import { HookFetcher } from '@lib/commerce/utils/types'
 import useCommerceSignup from '@lib/commerce/use-signup'
 import type { SignupBody } from './api/customers/signup'
 
@@ -17,10 +16,9 @@ export const fetcher: HookFetcher<null, SignupBody> = (
   fetch
 ) => {
   if (!(firstName && lastName && email && password)) {
-    throw new CommerceError({
-      message:
-        'A first name, last name, email and password are required to signup',
-    })
+    throw new Error(
+      'A first name, last name, email and password are required to signup'
+    )
   }
 
   return fetch({

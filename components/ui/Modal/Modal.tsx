@@ -2,7 +2,13 @@ import cn from 'classnames'
 import { FC, useRef } from 'react'
 import s from './Modal.module.css'
 import { useDialog } from '@react-aria/dialog'
-import { useOverlay, usePreventScroll, useModal } from '@react-aria/overlays'
+import {
+  useOverlay,
+  usePreventScroll,
+  useModal,
+  OverlayProvider,
+  OverlayContainer,
+} from '@react-aria/overlays'
 import { FocusScope } from '@react-aria/focus'
 
 interface Props {
@@ -21,13 +27,10 @@ const Modal: FC<Props> = ({
 }) => {
   const rootClassName = cn(s.root, className)
   let ref = useRef() as React.MutableRefObject<HTMLInputElement>
+  usePreventScroll()
   let { modalProps } = useModal()
   let { overlayProps } = useOverlay(props, ref)
   let { dialogProps } = useDialog(props, ref)
-
-  usePreventScroll({
-    isDisabled: !show,
-  })
 
   return (
     <div className={rootClassName}>

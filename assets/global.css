@@ -1,3 +1,5 @@
+@import './font.css';
+
 :root {
   --primary: white;
   --primary-2: #f1f3f5;
@@ -11,17 +13,16 @@
   --text-secondary: white;
 
   --hover: rgba(0, 0, 0, 0.075);
+  --hover-1: rgba(0, 0, 0, 0.15);
+  --hover-2: rgba(0, 0, 0, 0.25);
 
-  --cyan: #22b8cf;
+  --cyan: #50e3c2;
   --green: #37b679;
   --red: #da3c3c;
-  --pink: #e64980;
+  --pink: #ff0080;
   --purple: #f81ce5;
-
+  --violet: #7928ca;
   --blue: #0070f3;
-
-  --violet-light: #7048e8;
-  --violet: #5f3dc4;
 
   --accents-0: #f8f9fa;
   --accents-1: #f1f3f5;
@@ -41,6 +42,8 @@
   --secondary: white;
   --secondary-2: #f1f3f5;
   --hover: rgba(255, 255, 255, 0.075);
+  --hover-1: rgba(255, 255, 255, 0.15);
+  --hover-2: rgba(255, 255, 255, 0.25);
   --selection: var(--purple);
 
   --text-base: white;
@@ -57,6 +60,10 @@
   --accents-7: #e9ecef;
   --accents-8: #f1f3f5;
   --accents-9: #f8f9fa;
+}
+
+.fit {
+  min-height: calc(100vh - 88px - 41px);
 }
 
 *,
