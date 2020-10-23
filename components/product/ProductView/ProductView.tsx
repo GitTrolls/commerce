@@ -1,4 +1,5 @@
 import cn from 'classnames'
+import Image from 'next/image'
 import { NextSeo } from 'next-seo'
 import s from './ProductView.module.css'
 import { FC, useState, useEffect } from 'react'
@@ -9,7 +10,6 @@ import useAddItem from '@lib/bigcommerce/cart/use-add-item'
 import { isDesktop } from '@lib/browser'
 import type { ProductNode } from '@lib/bigcommerce/api/operations/get-product'
 import { getProductOptions } from '../helpers'
-import { Heart } from '@components/icon'
 
 interface Props {
   className?: string
@@ -48,7 +48,7 @@ const ProductView: FC<Props> = ({ product, className }) => {
   }
 
   return (
-    <Container className="max-w-none w-full" clean>
+    <Container>
       <NextSeo
         title={product.name}
         description={product.description}
@@ -58,7 +58,7 @@ const ProductView: FC<Props> = ({ product, className }) => {
           description: product.description,
           images: [
             {
-              url: product.images.edges?.[0]?.node.urlXL || '',
+              url: product.images.edges?.[0]?.node.urlOriginal!,
               width: 800,
               height: 600,
               alt: product.name,
@@ -79,17 +79,24 @@ const ProductView: FC<Props> = ({ product, className }) => {
 
           <div className={s.sliderContainer}>
             <ProductSlider>
-              {/** TODO: Change with Image Component  **/}
               {product.images.edges?.map((image, i) => (
-                <img
-                  key={image?.node.urlSmall}
-                  className={s.img}
-                  src={image?.node.urlXL}
-                  loading={i === 0 ? 'eager' : 'lazy'}
+                <Image
+                  key={image?.node.urlOriginal}
+                  src={image?.node.urlOriginal!}
+                  width={1200}
+                  height={1200}
+                  priority={i === 0}
+                  quality="90"
                 />
               ))}
             </ProductSlider>
           </div>
+
+          {!validMedia && (
+            <div className="absolute z-10 bottom-10 left-1/2 transform -translate-x-1/2 inline-block">
+              <img src="/slider-arrows.png" />
+            </div>
+          )}
         </div>
 
         <div className={s.sidebar}>
@@ -138,11 +145,6 @@ const ProductView: FC<Props> = ({ product, className }) => {
               </Button>
             </div>
           </section>
-        </div>
-
-        {/* TODO make it work */}
-        <div className={s.wishlistButton}>
-          <Heart />
         </div>
       </div>
     </Container>
