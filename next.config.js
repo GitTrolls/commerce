@@ -1,9 +1,4 @@
 module.exports = {
-  images: {
-    sizes: [320, 480, 820, 1200, 1600],
-    path: 'https://cdn11.bigcommerce.com/',
-    loader: 'bigCommerce',
-  },
   rewrites() {
     return [
       {
@@ -22,12 +17,6 @@ module.exports = {
       {
         source: '/checkout',
         destination: '/api/bigcommerce/checkout',
-      },
-      // The logout is also an action so this route is not required, but it's also another way
-      // you can allow a logout!
-      {
-        source: '/logout',
-        destination: '/api/bigcommerce/customers/logout?redirect_to=/',
       },
     ]
   },
