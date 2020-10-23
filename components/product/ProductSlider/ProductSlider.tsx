@@ -1,6 +1,6 @@
 import { useKeenSlider } from 'keen-slider/react'
-import Image from 'next/image'
 import React, { Children, FC, isValidElement, useState } from 'react'
+import { HiChevronLeft, HiChevronRight } from 'react-icons/hi'
 import cn from 'classnames'
 
 import s from './ProductSlider.module.css'
@@ -20,11 +20,12 @@ const ProductSlider: FC = ({ children }) => {
 
   return (
     <div className={s.root}>
-      <button className={cn(s.leftControl, s.control)} onClick={slider?.prev} />
-      <button
-        className={cn(s.rightControl, s.control)}
-        onClick={slider?.next}
-      />
+      <button className={cn(s.leftControl, s.control)} onClick={slider?.prev}>
+        <HiChevronLeft />
+      </button>
+      <button className={cn(s.rightControl, s.control)} onClick={slider?.next}>
+        <HiChevronRight />
+      </button>
       <div
         ref={ref}
         className="keen-slider h-full transition-opacity duration-150"
