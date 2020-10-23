@@ -63,15 +63,28 @@ export default function Home({
   }, [])
 
   return (
-    <div>
+    <div className="mt-3">
       <Grid>
-        {featured.slice(0, 3).map(({ node }) => (
-          <ProductCard key={node.path} product={node} />
+        {featured.slice(0, 3).map(({ node }, i) => (
+          <ProductCard
+            key={node.path}
+            product={node}
+            // The first image is the largest one in the grid
+            imgWidth={i === 0 ? 1600 : 820}
+            imgHeight={i === 0 ? 1600 : 820}
+            priority
+          />
         ))}
       </Grid>
       <Marquee variant="secondary">
-        {bestSelling.slice(3, 6).map(({ node }) => (
-          <ProductCard key={node.path} product={node} variant="slim" />
+        {bestSelling.slice(0, 3).map(({ node }) => (
+          <ProductCard
+            key={node.path}
+            product={node}
+            variant="slim"
+            imgWidth={320}
+            imgHeight={320}
+          />
         ))}
       </Marquee>
       <Hero
@@ -85,18 +98,30 @@ export default function Home({
         ‘Natural’."
       />
       <Grid layout="B">
-        {featured.slice(3, 6).map(({ node }) => (
-          <ProductCard key={node.path} product={node} />
+        {featured.slice(3, 6).map(({ node }, i) => (
+          <ProductCard
+            key={node.path}
+            product={node}
+            // The second image is the largest one in the grid
+            imgWidth={i === 1 ? 1600 : 820}
+            imgHeight={i === 1 ? 1600 : 820}
+          />
         ))}
       </Grid>
       <Marquee>
         {bestSelling.slice(3, 6).map(({ node }) => (
-          <ProductCard key={node.path} product={node} variant="slim" />
+          <ProductCard
+            key={node.path}
+            product={node}
+            variant="slim"
+            imgWidth={320}
+            imgHeight={320}
+          />
         ))}
       </Marquee>
       <div className="py-12 flex flex-row w-full px-12">
         <div className="pr-3 w-48 relative">
-          <div className="sticky top-32">
+          <div className="sticky top-2">
             <ul className="mb-10">
               <li className="py-1 text-base font-bold tracking-wide">
                 All Categories
@@ -122,7 +147,13 @@ export default function Home({
         <div className="flex-1">
           <Grid layout="normal">
             {newestProducts.map(({ node }) => (
-              <ProductCard key={node.path} product={node} variant="simple" />
+              <ProductCard
+                key={node.path}
+                product={node}
+                variant="simple"
+                imgWidth={480}
+                imgHeight={480}
+              />
             ))}
           </Grid>
         </div>
