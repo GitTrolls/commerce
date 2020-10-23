@@ -1,71 +1,36 @@
-import { useKeenSlider } from 'keen-slider/react'
-import React, { Children, FC, isValidElement, useState } from 'react'
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi'
-import cn from 'classnames'
-
+import React, { FC, useState } from 'react'
+import SwipeableViews from 'react-swipeable-views'
 import s from './ProductSlider.module.css'
+interface Props {
+  children?: any
+}
 
-const ProductSlider: FC = ({ children }) => {
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [isMounted, setIsMounted] = useState(false)
+const ProductSlider: FC<Props> = ({ children }) => {
+  const [idx, setIdx] = useState(0)
+  const count = React.Children.count(children)
 
-  const [ref, slider] = useKeenSlider<HTMLDivElement>({
-    loop: true,
-    slidesPerView: 1,
-    mounted: () => setIsMounted(true),
-    slideChanged(s) {
-      setCurrentSlide(s.details().relativeSlide)
-    },
-  })
+  const goBack = () => {
+    idx !== 0 ? setIdx(idx - 1) : setIdx(count - 1)
+  }
+
+  const goNext = () => {
+    idx + 1 === count ? setIdx(0) : setIdx(idx + 1)
+  }
 
   return (
     <div className={s.root}>
-      <button className={cn(s.leftControl, s.control)} onClick={slider?.prev}>
-        <HiChevronLeft />
-      </button>
-      <button className={cn(s.rightControl, s.control)} onClick={slider?.next}>
-        <HiChevronRight />
-      </button>
-      <div
-        ref={ref}
-        className="keen-slider h-full transition-opacity duration-150"
-        style={{ opacity: isMounted ? 1 : 0 }}
+      <SwipeableViews
+        index={idx}
+        onChangeIndex={setIdx}
+        containerStyle={{ overflow: 'visible' }}
+        slideStyle={{ overflow: 'visible' }}
       >
-        {Children.map(children, (child) => {
-          // Add the keen-slider__slide className to children
-          if (isValidElement(child)) {
-            return {
-              ...child,
-              props: {
-                ...child.props,
-                className: `${
-                  child.props.className ? `${child.props.className} ` : ''
-                }keen-slider__slide`,
-              },
-            }
-          }
-          return child
-        })}
+        {children}
+      </SwipeableViews>
+      <div className={s.rootPanel}>
+        <div className={s.leftPanel} onClick={goBack}></div>
+        <div className={s.rightPanel} onClick={goNext}></div>
       </div>
-      {slider && (
-        <div className={cn(s.positionIndicatorsContainer)}>
-          {[...Array(slider.details().size).keys()].map((idx) => {
-            return (
-              <button
-                key={idx}
-                className={cn(s.positionIndicator, {
-                  [s.positionIndicatorActive]: currentSlide === idx,
-                })}
-                onClick={() => {
-                  slider.moveToSlideRelative(idx)
-                }}
-              >
-                <div className={s.dot} />
-              </button>
-            )
-          })}
-        </div>
-      )}
     </div>
   )
 }
