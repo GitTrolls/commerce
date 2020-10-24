@@ -1,33 +1,36 @@
+import { ConfigInterface } from 'swr'
 import { HookFetcher } from '@lib/commerce/utils/types'
-import type { SwrOptions } from '@lib/commerce/utils/use-data'
-import useCommerceCustomer from '@lib/commerce/use-customer'
+import useCommerceCustomer, { CustomerInput } from '@lib/commerce/use-customer'
 import type { Customer, CustomerData } from './api/customers'
 
 const defaultOpts = {
-  url: '/api/bigcommerce/customers',
+  url: '/api/bigcommerce/customer',
   method: 'GET',
 }
 
 export type { Customer }
 
-export const fetcher: HookFetcher<Customer | null> = async (
+export const fetcher: HookFetcher<CustomerData | null, CustomerInput> = (
   options,
-  _,
+  { cartId },
   fetch
 ) => {
-  const data = await fetch<CustomerData>({ ...defaultOpts, ...options })
-  return data.customer
+  return cartId ? fetch({ ...defaultOpts, ...options }) : null
 }
 
 export function extendHook(
   customFetcher: typeof fetcher,
-  swrOptions?: SwrOptions<Customer | null>
+  swrOptions?: ConfigInterface
 ) {
   const useCustomer = () => {
-    return useCommerceCustomer(defaultOpts, [], customFetcher, {
-      revalidateOnFocus: false,
-      ...swrOptions,
-    })
+    const cart = useCommerceCustomer<CustomerData | null>(
+      defaultOpts,
+      [],
+      customFetcher,
+      { revalidateOnFocus: false, ...swrOptions }
+    )
+
+    return cart
   }
 
   useCustomer.extend = extendHook
