@@ -1,7 +1,7 @@
-import type { responseInterface } from 'swr'
+import { responseInterface, ConfigInterface } from 'swr'
 import Cookies from 'js-cookie'
 import type { HookInput, HookFetcher, HookFetcherOptions } from '../utils/types'
-import useData, { SwrOptions } from '../utils/use-data'
+import useData from '../utils/use-data'
 import { useCommerce } from '..'
 
 export type CartResponse<C> = responseInterface<C, Error> & {
@@ -12,11 +12,11 @@ export type CartInput = {
   cartId: string | undefined
 }
 
-export default function useCart<Result>(
+export default function useCart<T>(
   options: HookFetcherOptions,
   input: HookInput,
-  fetcherFn: HookFetcher<Result, CartInput>,
-  swrOptions?: SwrOptions<Result, CartInput>
+  fetcherFn: HookFetcher<T | null, CartInput>,
+  swrOptions?: ConfigInterface<T | null>
 ) {
   const { cartCookie } = useCommerce()
 
@@ -27,5 +27,5 @@ export default function useCart<Result>(
 
   const response = useData(options, input, fetcher, swrOptions)
 
-  return Object.assign(response, { isEmpty: true }) as CartResponse<Result>
+  return Object.assign(response, { isEmpty: true }) as CartResponse<T>
 }
