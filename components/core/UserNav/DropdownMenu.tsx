@@ -40,13 +40,13 @@ const DropdownMenu: FC<DropdownMenuProps> = ({ open = false }) => {
     >
       <Menu.Items className={s.dropdownMenu}>
         {LINKS.map(({ name, href }) => (
-          <Menu.Item key={href}>
-            {({ active }) => (
-              <Link href={href}>
+          <Link href={href} key={href}>
+            <Menu.Item>
+              {({ active }) => (
                 <a className={cn(s.link, { [s.active]: active })}>{name}</a>
-              </Link>
-            )}
-          </Menu.Item>
+              )}
+            </Menu.Item>
+          </Link>
         ))}
         <Menu.Item>
           <a

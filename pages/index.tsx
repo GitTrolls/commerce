@@ -8,12 +8,7 @@ import { Layout } from '@components/core'
 import { Grid, Marquee, Hero } from '@components/ui'
 import { ProductCard } from '@components/product'
 
-export async function getStaticProps({
-  preview,
-  locale,
-}: GetStaticPropsContext) {
-  console.log('LOCALE', locale)
-
+export async function getStaticProps({ preview }: GetStaticPropsContext) {
   const { products: featuredProducts } = await getAllProducts({
     variables: { field: 'featuredProducts', first: 6 },
   })
