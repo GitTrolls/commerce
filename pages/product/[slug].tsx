@@ -1,10 +1,5 @@
-import {
-  GetStaticPathsContext,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
-} from 'next'
+import { GetStaticPropsContext, InferGetStaticPropsType } from 'next'
 import { useRouter } from 'next/router'
-import { getConfig } from '@lib/bigcommerce/api'
 import getAllPages from '@lib/bigcommerce/api/operations/get-all-pages'
 import getProduct from '@lib/bigcommerce/api/operations/get-product'
 import { Layout } from '@components/core'
@@ -13,15 +8,9 @@ import getAllProductPaths from '@lib/bigcommerce/api/operations/get-all-product-
 
 export async function getStaticProps({
   params,
-  locale,
 }: GetStaticPropsContext<{ slug: string }>) {
-  const config = getConfig({ locale })
-
-  const { pages } = await getAllPages({ config })
-  const { product } = await getProduct({
-    variables: { slug: params!.slug },
-    config,
-  })
+  const { pages } = await getAllPages()
+  const { product } = await getProduct({ variables: { slug: params!.slug } })
 
   if (!product) {
     throw new Error(`Product with slug '${params!.slug}' not found`)
@@ -33,19 +22,11 @@ export async function getStaticProps({
   }
 }
 
-export async function getStaticPaths({ locales }: GetStaticPathsContext) {
+export async function getStaticPaths() {
   const { products } = await getAllProductPaths()
 
   return {
-    paths: locales
-      ? locales.reduce<string[]>((arr, locale) => {
-          // Add a product path for every locale
-          products.forEach((product) => {
-            arr.push(`/${locale}/product${product.node.path}`)
-          })
-          return arr
-        }, [])
-      : products.map((product) => `/product${product.node.path}`),
+    paths: products.map((product) => `/product${product.node.path}`),
     // If your store has tons of products, enable fallback mode to improve build times!
     fallback: false,
   }

@@ -1,5 +1,4 @@
 export interface CommerceAPIConfig {
-  locale?: string
   commerceUrl: string
   apiToken: string
   cartCookie: string
