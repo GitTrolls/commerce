@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { Switch } from '@headlessui/react'
-import { Moon, Sun } from '@components/icon'
+import { HiSun, HiMoon } from 'react-icons/hi'
 interface Props {
   className?: string
   checked: boolean
@@ -35,7 +35,7 @@ const Toggle: FC<Props> = ({ className, checked, onChange }) => {
                 : 'opacity-100 ease-in duration-150'
             } absolute inset-0 h-full w-full flex items-center justify-center transition-opacity`}
           >
-            <Sun className="h-3 w-3 text-accent-3" />
+            <HiSun className="h-3 w-3 text-gray-400" />
           </span>
           <span
             className={`${
@@ -44,7 +44,7 @@ const Toggle: FC<Props> = ({ className, checked, onChange }) => {
                 : 'opacity-0 ease-out duration-150'
             } opacity-0 ease-out duration-150 absolute inset-0 h-full w-full flex items-center justify-center transition-opacity`}
           >
-            <Moon className="h-3 w-3 text-yellow-400" />
+            <HiMoon className="h-3 w-3 text-yellow-400" />
           </span>
         </span>
       </span>

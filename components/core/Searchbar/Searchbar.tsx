@@ -5,10 +5,9 @@ import { useRouter } from 'next/router'
 
 interface Props {
   className?: string
-  id?: string
 }
 
-const Searchbar: FC<Props> = ({ className, id = 'search' }) => {
+const Searchbar: FC<Props> = ({ className }) => {
   const router = useRouter()
 
   useEffect(() => {
@@ -22,30 +21,27 @@ const Searchbar: FC<Props> = ({ className, id = 'search' }) => {
         className
       )}
     >
-      <label htmlFor={id}>
-        <input
-          id={id}
-          className={s.input}
-          placeholder="Search for products..."
-          defaultValue={router.query.q}
-          onKeyUp={(e) => {
-            e.preventDefault()
+      <input
+        className={s.input}
+        placeholder="Search for products..."
+        defaultValue={router.query.q}
+        onKeyUp={(e) => {
+          e.preventDefault()
 
-            if (e.key === 'Enter') {
-              const q = e.currentTarget.value
+          if (e.key === 'Enter') {
+            const q = e.currentTarget.value
 
-              router.push(
-                {
-                  pathname: `/search`,
-                  query: q ? { q } : {},
-                },
-                undefined,
-                { shallow: true }
-              )
-            }
-          }}
-        />
-      </label>
+            router.push(
+              {
+                pathname: `/search`,
+                query: q ? { q } : {},
+              },
+              undefined,
+              { shallow: true }
+            )
+          }
+        }}
+      />
       <div className={s.iconContainer}>
         <svg className={s.icon} fill="currentColor" viewBox="0 0 20 20">
           <path

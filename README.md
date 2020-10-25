@@ -1,1 +1,1 @@
-# Next.js Commerce
+# Commerce Example

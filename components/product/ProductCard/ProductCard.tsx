@@ -1,10 +1,10 @@
-import React, { FC, ReactNode, Component } from 'react'
+import { FC, ReactNode, Component } from 'react'
 import cn from 'classnames'
-import s from './ProductCard.module.css'
+import Image from 'next/image'
 import Link from 'next/link'
-import { Heart } from '@components/icon'
-import { EnhancedImage } from '@components/core'
 import type { ProductNode } from '@lib/bigcommerce/api/operations/get-all-products'
+import { Heart } from '@components/icon'
+import s from './ProductCard.module.css'
 
 interface Props {
   className?: string
@@ -24,7 +24,7 @@ const ProductCard: FC<Props> = ({
   imgHeight,
   priority,
 }) => {
-  const src = p.images.edges?.[0]?.node.urlLarge!
+  const src = p.images.edges?.[0]?.node.urlOriginal!
 
   if (variant === 'slim') {
     return (
@@ -34,9 +34,8 @@ const ProductCard: FC<Props> = ({
             {p.name}
           </span>
         </div>
-        <EnhancedImage
-          src={p.images.edges?.[0]?.node.urlSmall!}
-          alt={p.name}
+        <Image
+          src={src}
           width={imgWidth}
           height={imgHeight}
           priority={priority}
@@ -64,8 +63,7 @@ const ProductCard: FC<Props> = ({
           </div>
         </div>
         <div className={cn(s.imageContainer)}>
-          <EnhancedImage
-            alt={p.name}
+          <Image
             className={cn('w-full object-cover', s['product-image'])}
             src={src}
             width={imgWidth}

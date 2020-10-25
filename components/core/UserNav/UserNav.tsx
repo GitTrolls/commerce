@@ -42,7 +42,7 @@ const UserNav: FC<Props> = ({ className, children, ...props }) => {
             <Menu>
               {({ open }) => (
                 <>
-                  <Menu.Button className={s.avatarButton} aria-label="Menu">
+                  <Menu.Button className={s.avatarButton}>
                     <Avatar />
                   </Menu.Button>
                   <DropdownMenu open={open} />
