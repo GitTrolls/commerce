@@ -7,24 +7,19 @@ import { Layout, HTMLContent } from '@components/core'
 export async function getStaticProps({
   preview,
   params,
-  locale,
 }: GetStaticPropsContext<{ pages: string[] }>) {
   const { pages } = await getAllPages()
-  const path = params?.pages.join('/')
-  const slug = locale ? `${locale}/${path}` : path
-
+  const slug = params?.pages.join('/')
   const pageItem = pages.find((p) => (p.url ? getSlug(p.url) === slug : false))
   const data = pageItem && (await getPage({ variables: { id: pageItem.id! } }))
   const page = data?.page
 
   if (!page) {
-    // We throw to make sure this fails at build time as this is never expected to happen
     throw new Error(`Page with slug '${slug}' not found`)
   }
 
   return {
     props: { pages, page },
-    revalidate: 60 * 60, // Every hour
   }
 }
 

@@ -1,13 +1,11 @@
 import { FC } from 'react'
 import cn from 'classnames'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import type { Page } from '@lib/bigcommerce/api/operations/get-all-pages'
 import getSlug from '@utils/get-slug'
 import { Github } from '@components/icon'
 import { Logo, Container } from '@components/ui'
+import type { Page } from '@lib/bigcommerce/api/operations/get-all-pages'
 import { I18nWidget } from '@components/core'
-
 interface Props {
   className?: string
   children?: any
@@ -17,8 +15,8 @@ interface Props {
 const LEGAL_PAGES = ['terms-of-use', 'shipping-returns', 'privacy-policy']
 
 const Footer: FC<Props> = ({ className, pages }) => {
-  const { sitePages, legalPages } = usePages(pages)
   const rootClassName = cn(className)
+  const { sitePages, legalPages } = getPages(pages)
 
   return (
     <footer className={rootClassName}>
@@ -108,22 +106,18 @@ const Footer: FC<Props> = ({ className, pages }) => {
   )
 }
 
-function usePages(pages?: Page[]) {
-  const { locale } = useRouter()
+function getPages(pages?: Page[]) {
   const sitePages: Page[] = []
   const legalPages: Page[] = []
 
   if (pages) {
     pages.forEach((page) => {
-      const slug = page.url && getSlug(page.url)
-
-      if (!slug) return
-      if (locale && !slug.startsWith(`${locale}/`)) return
-
-      if (isLegalPage(slug, locale)) {
-        legalPages.push(page)
-      } else {
-        sitePages.push(page)
+      if (page.url) {
+        if (LEGAL_PAGES.includes(getSlug(page.url))) {
+          legalPages.push(page)
+        } else {
+          sitePages.push(page)
+        }
       }
     })
   }
@@ -133,11 +127,6 @@ function usePages(pages?: Page[]) {
     legalPages: legalPages.sort(bySortOrder),
   }
 }
-
-const isLegalPage = (slug: string, locale?: string) =>
-  locale
-    ? LEGAL_PAGES.some((p) => `${locale}/${p}` === slug)
-    : LEGAL_PAGES.includes(slug)
 
 // Sort pages by the sort order assigned in the BC dashboard
 function bySortOrder(a: Page, b: Page) {

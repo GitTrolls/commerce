@@ -1807,20 +1807,6 @@ export type ProductInfoFragment = { __typename?: 'Product' } & Pick<
         >
       >
     }
-    localeMeta: { __typename?: 'MetafieldConnection' } & {
-      edges?: Maybe<
-        Array<
-          Maybe<
-            { __typename?: 'MetafieldEdge' } & {
-              node: { __typename?: 'Metafields' } & Pick<
-                Metafields,
-                'key' | 'value'
-              >
-            }
-          >
-        >
-      >
-    }
   }
 
 export type ProductConnnectionFragment = {
@@ -1862,8 +1848,6 @@ export type GetAllProductPathsQuery = { __typename?: 'Query' } & {
 }
 
 export type GetAllProductsQueryVariables = Exact<{
-  hasLocale?: Maybe<Scalars['Boolean']>
-  locale?: Maybe<Scalars['String']>
   entityIds?: Maybe<Array<Scalars['Int']>>
   first?: Maybe<Scalars['Int']>
   imgSmallWidth?: Maybe<Scalars['Int']>
@@ -1896,8 +1880,6 @@ export type GetAllProductsQuery = { __typename?: 'Query' } & {
 }
 
 export type GetProductQueryVariables = Exact<{
-  hasLocale?: Maybe<Scalars['Boolean']>
-  locale?: Maybe<Scalars['String']>
   path: Scalars['String']
   imgSmallWidth?: Maybe<Scalars['Int']>
   imgSmallHeight?: Maybe<Scalars['Int']>
