@@ -1,14 +1,16 @@
 import { FC, useEffect, useState } from 'react'
 import cn from 'classnames'
+import { useRouter } from 'next/router'
 import type { Page } from '@lib/bigcommerce/api/operations/get-all-pages'
 import { CommerceProvider } from '@lib/bigcommerce'
-import { Navbar, Featurebar, Footer } from '@components/core'
-import { Container, Sidebar } from '@components/ui'
-import Button from '@components/ui/Button'
 import { CartSidebarView } from '@components/cart'
+import { Container, Sidebar, Button, Modal } from '@components/ui'
+import { Navbar, Featurebar, Footer } from '@components/core'
+import { LoginView, SignUpView } from '@components/auth'
 import { useUI } from '@components/ui/context'
-import s from './Layout.module.css'
 import { usePreventScroll } from '@react-aria/overlays'
+import s from './Layout.module.css'
+
 interface Props {
   pageProps: {
     pages?: Page[]
@@ -16,9 +18,16 @@ interface Props {
 }
 
 const Layout: FC<Props> = ({ children, pageProps }) => {
-  const { displaySidebar, displayDropdown, closeSidebar } = useUI()
+  const {
+    displaySidebar,
+    displayModal,
+    closeSidebar,
+    closeModal,
+    modalView,
+  } = useUI()
   const [acceptedCookies, setAcceptedCookies] = useState(false)
   const [hasScrolled, setHasScrolled] = useState(false)
+  const { locale = 'en-US' } = useRouter()
 
   // TODO: Update code, add throttle and more.
   // TODO: Make sure to not do any unnecessary updates as it's doing right now
@@ -37,11 +46,11 @@ const Layout: FC<Props> = ({ children, pageProps }) => {
   }, [])
 
   usePreventScroll({
-    isDisabled: !displaySidebar,
+    isDisabled: !(displaySidebar || displayModal),
   })
 
   return (
-    <CommerceProvider locale="en-us">
+    <CommerceProvider locale={locale}>
       <div className={cn(s.root)}>
         <header
           className={cn(
@@ -55,11 +64,13 @@ const Layout: FC<Props> = ({ children, pageProps }) => {
         </header>
         <main className="fit">{children}</main>
         <Footer pages={pageProps.pages} />
-
         <Sidebar open={displaySidebar} onClose={closeSidebar}>
           <CartSidebarView />
         </Sidebar>
-
+        <Modal open={displayModal} onClose={closeModal}>
+          {modalView === 'LOGIN_VIEW' && <LoginView />}
+          {modalView === 'SIGNUP_VIEW' && <SignUpView />}
+        </Modal>
         <Featurebar
           title="This site uses cookies to improve your experience."
           description="By clicking, you agree to our Privacy Policy."
