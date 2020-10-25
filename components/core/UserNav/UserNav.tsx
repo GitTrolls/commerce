@@ -5,11 +5,10 @@ import { FC } from 'react'
 import { Heart, Bag } from '@components/icon'
 import { Avatar } from '@components/core'
 import { useUI } from '@components/ui/context'
-import { LoginView } from '@components/auth'
 import DropdownMenu from './DropdownMenu'
 import { Menu } from '@headlessui/react'
 import useCart from '@lib/bigcommerce/cart/use-cart'
-import useCustomer from '@lib/bigcommerce/use-customer'
+
 interface Props {
   className?: string
 }
@@ -20,10 +19,9 @@ const countItems = (count: number, items: any[]) =>
 
 const UserNav: FC<Props> = ({ className, children, ...props }) => {
   const { data } = useCart()
-  const { data: customer } = useCustomer()
-
   const { openSidebar, closeSidebar, displaySidebar } = useUI()
   const itemsCount = Object.values(data?.line_items ?? {}).reduce(countItems, 0)
+
   return (
     <nav className={cn(s.root, className)}>
       <div className={s.mainContainer}>
@@ -47,11 +45,7 @@ const UserNav: FC<Props> = ({ className, children, ...props }) => {
                   <Menu.Button className={s.avatarButton} aria-label="Menu">
                     <Avatar />
                   </Menu.Button>
-                  {customer ? (
-                    <DropdownMenu open={open} />
-                  ) : (
-                    <LoginView open={open} />
-                  )}
+                  <DropdownMenu open={open} />
                 </>
               )}
             </Menu>

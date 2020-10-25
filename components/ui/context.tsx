@@ -5,13 +5,11 @@ import { SSRProvider, OverlayProvider } from 'react-aria'
 export interface State {
   displaySidebar: boolean
   displayDropdown: boolean
-  displayModal: boolean
 }
 
 const initialState = {
   displaySidebar: false,
   displayDropdown: false,
-  displayModal: false,
 }
 
 type Action =
@@ -26,12 +24,6 @@ type Action =
     }
   | {
       type: 'CLOSE_DROPDOWN'
-    }
-  | {
-      type: 'OPEN_MODAL'
-    }
-  | {
-      type: 'CLOSE_MODAL'
     }
 
 export const UIContext = React.createContext<State | any>(initialState)
@@ -64,18 +56,6 @@ function uiReducer(state: State, action: Action) {
         displayDropdown: false,
       }
     }
-    case 'OPEN_MODAL': {
-      return {
-        ...state,
-        displayModal: true,
-      }
-    }
-    case 'CLOSE_MODAL': {
-      return {
-        ...state,
-        displayModal: false,
-      }
-    }
   }
 }
 
@@ -88,20 +68,13 @@ export const UIProvider: FC = (props) => {
   const openDropdown = () => dispatch({ type: 'OPEN_DROPDOWN' })
   const closeDropdown = () => dispatch({ type: 'CLOSE_DROPDOWN' })
 
-  const openModal = () => dispatch({ type: 'OPEN_MODAL' })
-  const closeModal = () => dispatch({ type: 'CLOSE_MODAL' })
-
   const value = {
     ...state,
     openSidebar,
     closeSidebar,
     openDropdown,
     closeDropdown,
-    openModal,
-    closeModal,
   }
-
-  console.log('state', state)
 
   return <UIContext.Provider value={value} {...props} />
 }
