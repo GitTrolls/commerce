@@ -51,6 +51,10 @@ export const productInfoFragment = /* GraphQL */ `
         value
         currencyCode
       }
+      retailPrice {
+        value
+        currencyCode
+      }
     }
     images {
       edges {
@@ -75,6 +79,15 @@ export const productInfoFragment = /* GraphQL */ `
           entityId
           displayName
           ...multipleChoiceOption
+        }
+      }
+    }
+    localeMeta: metafields(namespace: $locale, keys: ["name", "description"])
+      @include(if: $hasLocale) {
+      edges {
+        node {
+          key
+          value
         }
       }
     }
