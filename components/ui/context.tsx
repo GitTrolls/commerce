@@ -6,9 +6,7 @@ export interface State {
   displaySidebar: boolean
   displayDropdown: boolean
   displayModal: boolean
-  displayToast: boolean
   modalView: string
-  toastText: string
 }
 
 const initialState = {
@@ -16,8 +14,6 @@ const initialState = {
   displayDropdown: false,
   displayModal: false,
   modalView: 'LOGIN_VIEW',
-  displayToast: false,
-  toastText: '',
 }
 
 type Action =
@@ -26,16 +22,6 @@ type Action =
     }
   | {
       type: 'CLOSE_SIDEBAR'
-    }
-  | {
-      type: 'OPEN_TOAST'
-    }
-  | {
-      type: 'CLOSE_TOAST'
-    }
-  | {
-      type: 'SET_TOAST_TEXT'
-      text: ToastText
     }
   | {
       type: 'OPEN_DROPDOWN'
@@ -59,7 +45,6 @@ type Action =
     }
 
 type MODAL_VIEWS = 'SIGNUP_VIEW' | 'LOGIN_VIEW'
-type ToastText = string
 
 export const UIContext = React.createContext<State | any>(initialState)
 
@@ -103,28 +88,10 @@ function uiReducer(state: State, action: Action) {
         displayModal: false,
       }
     }
-    case 'OPEN_TOAST': {
-      return {
-        ...state,
-        displayToast: true,
-      }
-    }
-    case 'CLOSE_TOAST': {
-      return {
-        ...state,
-        displayToast: false,
-      }
-    }
     case 'SET_MODAL_VIEW': {
       return {
         ...state,
         modalView: action.view,
-      }
-    }
-    case 'SET_TOAST_TEXT': {
-      return {
-        ...state,
-        toastText: action.text,
       }
     }
   }
@@ -142,9 +109,6 @@ export const UIProvider: FC = (props) => {
   const openModal = () => dispatch({ type: 'OPEN_MODAL' })
   const closeModal = () => dispatch({ type: 'CLOSE_MODAL' })
 
-  const openToast = () => dispatch({ type: 'OPEN_TOAST' })
-  const closeToast = () => dispatch({ type: 'CLOSE_TOAST' })
-
   const setModalView = (view: MODAL_VIEWS) =>
     dispatch({ type: 'SET_MODAL_VIEW', view })
 
@@ -157,13 +121,7 @@ export const UIProvider: FC = (props) => {
     openModal,
     closeModal,
     setModalView,
-    openToast,
-    closeToast,
   }
-
-  setTimeout(() => {
-    openToast()
-  }, 200)
 
   return <UIContext.Provider value={value} {...props} />
 }
