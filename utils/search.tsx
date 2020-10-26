@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import getSlug from './get-slug'
 
 export function useSearchMeta(asPath: string) {
   const [pathname, setPathname] = useState<string>('/search')
@@ -35,16 +34,11 @@ export const filterQuery = (query: any) =>
     return obj
   }, {})
 
-export const getCategoryPath = (path: string, brand?: string) => {
-  const category = getSlug(path)
+export const getCategoryPath = (slug: string, brand?: string) =>
+  `/search${brand ? `/designers/${brand}` : ''}${slug ? `/${slug}` : ''}`
 
-  return `/search${brand ? `/designers/${brand}` : ''}${
-    category ? `/${category}` : ''
-  }`
-}
-
-export const getDesignerPath = (path: string, category?: string) => {
-  const designer = getSlug(path).replace(/^brands/, 'designers')
+export const getDesignerPath = (slug: string, category?: string) => {
+  const designer = slug.replace(/^brands/, 'designers')
 
   return `/search${designer ? `/${designer}` : ''}${
     category ? `/${category}` : ''
