@@ -5,11 +5,9 @@ import getAllProducts from '@lib/bigcommerce/api/operations/get-all-products'
 import getSiteInfo from '@lib/bigcommerce/api/operations/get-site-info'
 import getAllPages from '@lib/bigcommerce/api/operations/get-all-pages'
 import rangeMap from '@lib/range-map'
-import { getCategoryPath, getDesignerPath } from '@utils/search'
 import { Layout } from '@components/core'
 import { Grid, Marquee, Hero } from '@components/ui'
 import { ProductCard } from '@components/product'
-import Link from 'next/link'
 
 export async function getStaticProps({
   preview,
@@ -134,29 +132,21 @@ export default function Home({
           <div className="sticky top-32">
             <ul className="mb-10">
               <li className="py-1 text-base font-bold tracking-wide">
-                <Link href={getCategoryPath('')}>
-                  <a>All Categories</a>
-                </Link>
+                All Categories
               </li>
               {categories.map((cat) => (
                 <li key={cat.path} className="py-1 text-accents-8">
-                  <Link href={getCategoryPath(cat.path)}>
-                    <a>{cat.name}</a>
-                  </Link>
+                  <a href="#">{cat.name}</a>
                 </li>
               ))}
             </ul>
             <ul className="">
               <li className="py-1 text-base font-bold tracking-wide">
-                <Link href={getDesignerPath('')}>
-                  <a>All Designers</a>
-                </Link>
+                All Designers
               </li>
               {brands.flatMap(({ node }) => (
                 <li key={node.path} className="py-1 text-accents-8">
-                  <Link href={getDesignerPath(node.path)}>
-                    <a>{node.name}</a>
-                  </Link>
+                  <a href="#">{node.name}</a>
                 </li>
               ))}
             </ul>
