@@ -19,15 +19,9 @@ module.exports = {
         source: '/search/designers/:name/:category',
         destination: '/search',
       },
-      // Search
       {
         // This rewrite will also handle `/search/designers`
         source: '/search/:category',
-        destination: '/search',
-      },
-      {
-        // This rewrite will also handle `/search/designers`
-        source: '/:locale/search/:category',
         destination: '/search',
       },
       {
