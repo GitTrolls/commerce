@@ -11,16 +11,15 @@ import removeItem from './handlers/remove-item'
 import updateWishlist from './handlers/update-wishlist'
 import removeWishlist from './handlers/remove-wishlist'
 import addWishlist from './handlers/add-wishlist'
-import { definitions } from '../definitions/wishlist'
 
 type Body<T> = Partial<T> | undefined
 
 export type ItemBody = {
-  productId: number
-  variantId: number
+  product_id: number
+  variant_id: number
 }
 
-export type AddItemBody = { item: ItemBody }
+export type AddItemBody = { wishlistId: string; item: ItemBody }
 
 export type RemoveItemBody = { wishlistId: string; itemId: string }
 
@@ -33,11 +32,21 @@ export type WishlistBody = {
 
 export type AddWishlistBody = { wishlist: WishlistBody }
 
-export type Wishlist = definitions['wishlist_Full']
+// TODO: this type should match:
+// https://developer.bigcommerce.com/api-reference/store-management/wishlists/wishlists/wishlistsbyidget
+export type Wishlist = {
+  id: string
+  customer_id: number
+  name: string
+  is_public: boolean
+  token: string
+  items: any[]
+  // TODO: add missing fields
+}
 
 export type WishlistHandlers = {
   getAllWishlists: BigcommerceHandler<Wishlist[], { customerId?: string }>
-  getWishlist: BigcommerceHandler<Wishlist, { customerToken?: string }>
+  getWishlist: BigcommerceHandler<Wishlist, { wishlistId?: string }>
   addWishlist: BigcommerceHandler<
     Wishlist,
     { wishlistId: string } & Body<AddWishlistBody>
@@ -48,7 +57,7 @@ export type WishlistHandlers = {
   >
   addItem: BigcommerceHandler<
     Wishlist,
-    { customerToken?: string } & Body<AddItemBody>
+    { wishlistId: string } & Body<AddItemBody>
   >
   removeItem: BigcommerceHandler<
     Wishlist,
@@ -68,21 +77,17 @@ const wishlistApi: BigcommerceApiHandler<Wishlist, WishlistHandlers> = async (
 ) => {
   if (!isAllowedMethod(req, res, METHODS)) return
 
-  const { cookies } = req
-  const customerToken = cookies[config.customerCookie]
-
   try {
     const { wishlistId, itemId, customerId } = req.body
-
     // Return current wishlist info
     if (req.method === 'GET' && wishlistId) {
-      const body = { customerToken }
+      const body = { wishlistId: wishlistId as string }
       return await handlers['getWishlist']({ req, res, config, body })
     }
 
     // Add an item to the wishlist
-    if (req.method === 'POST') {
-      const body = { ...req.body, customerToken }
+    if (req.method === 'POST' && wishlistId) {
+      const body = { ...req.body, wishlistId }
       return await handlers['addItem']({ req, res, config, body })
     }
 

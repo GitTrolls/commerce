@@ -7,6 +7,7 @@ import { useUI } from '@components/ui/context'
 import useCart from '@lib/bigcommerce/cart/use-cart'
 import usePrice from '@lib/bigcommerce/use-price'
 import CartItem from '../CartItem'
+import s from './CartSidebarView.module.css'
 
 const CartSidebarView: FC = () => {
   const { data, isEmpty } = useCart()
@@ -32,10 +33,10 @@ const CartSidebarView: FC = () => {
 
   return (
     <div
-      className={cn('h-full flex flex-col', {
-        'bg-white text-black': isEmpty,
-        'bg-red text-white': error,
-        'bg-green text-white': success,
+      className={cn(s.root, {
+        [s.empty]: error,
+        [s.empty]: success,
+        [s.empty]: isEmpty,
       })}
     >
       <header className="px-4 pt-6 pb-4 sm:px-6">
@@ -56,8 +57,8 @@ const CartSidebarView: FC = () => {
       </header>
 
       {isEmpty ? (
-        <div className="flex-1 px-4 flex flex-col justify-center items-center ">
-          <span className="border border-dashed border-white rounded-full flex items-center justify-center w-16 h-16 bg-black p-12 rounded-lg text-white">
+        <div className="flex-1 px-4 flex flex-col justify-center items-center">
+          <span className="border border-dashed border-primary rounded-full flex items-center justify-center w-16 h-16 p-12 bg-secondary text-secondary">
             <Bag className="absolute" />
           </span>
           <h2 className="pt-6 text-2xl font-bold tracking-wide text-center">
@@ -116,7 +117,7 @@ const CartSidebarView: FC = () => {
                 </li>
                 <li className="flex justify-between py-1">
                   <span>Estimated Shipping</span>
-                  <span>FREE</span>
+                  <span className="font-bold tracking-wide">FREE</span>
                 </li>
               </ul>
               <div className="flex justify-between border-t border-accents-3 py-3 font-bold mb-10">

@@ -1,48 +1,36 @@
 import { HookFetcher } from '@lib/commerce/utils/types'
-import { SwrOptions } from '@lib/commerce/utils/use-data'
-import useCommerceWishlist from '@lib/commerce/wishlist/use-wishlist'
+import useData from '@lib/commerce/utils/use-data'
 import type { Wishlist } from '../api/wishlist'
-import useCustomer from '../use-customer'
 
 const defaultOpts = {
-  url: '/api/bigcommerce/wishlist',
+  url: '/api/bigcommerce/wishlists',
   method: 'GET',
 }
 
 export type { Wishlist }
 
-export const fetcher: HookFetcher<Wishlist | null, { customerId?: number }> = (
-  options,
-  { customerId },
-  fetch
-) => {
-  return customerId ? fetch({ ...defaultOpts, ...options }) : null
+export type WishlistInput = {
+  wishlistId: string | undefined
 }
 
-export function extendHook(
-  customFetcher: typeof fetcher,
-  swrOptions?: SwrOptions<Wishlist | null, { customerId?: number }>
-) {
-  const useWishlists = () => {
-    const { data: customer } = useCustomer()
-    const response = useCommerceWishlist(
-      defaultOpts,
-      [['customerId', customer?.entityId]],
-      customFetcher,
-      {
-        revalidateOnFocus: false,
-        ...swrOptions,
-      }
-    )
+export const fetcher: HookFetcher<Wishlist | null, WishlistInput> = (
+  options,
+  { wishlistId },
+  fetch
+) => {
+  return fetch({
+    ...defaultOpts,
+    ...options,
+    body: { wishlistId },
+  })
+}
 
-    // Uses a getter to only calculate the prop when required
-    // response.data is also a getter and it's better to not trigger it early
-    Object.defineProperty(response, 'isEmpty', {
-      get() {
-        return (response.data?.items?.length || 0) > 0
-      },
-      set: (x) => x,
-    })
+export function extendHook(customFetcher: typeof fetcher) {
+  const useWishlists = (wishlistId: string) => {
+    const fetchFn: typeof fetcher = (options, input, fetch) => {
+      return customFetcher(options, input, fetch)
+    }
+    const response = useData(defaultOpts, [['wishlistId', wishlistId]], fetchFn)
 
     return response
   }

@@ -1,12 +1,9 @@
 import type { WishlistHandlers } from '..'
-import getCustomerId from '../../operations/get-customer-id'
-import getCustomerWishlist from '../../operations/get-customer-wishlist'
-import { parseWishlistItem } from '../../utils/parse-item'
 
-// Returns the wishlist of the signed customer
+// Return current wishlist info
 const addItem: WishlistHandlers['addItem'] = async ({
   res,
-  body: { customerToken, item },
+  body: { wishlistId, item },
   config,
 }) => {
   if (!item) {
@@ -16,36 +13,16 @@ const addItem: WishlistHandlers['addItem'] = async ({
     })
   }
 
-  const customerId =
-    customerToken && (await getCustomerId({ customerToken, config }))
-
-  if (!customerId) {
-    return res.status(400).json({
-      data: null,
-      errors: [{ message: 'Invalid request' }],
-    })
-  }
-
-  const { wishlist } = await getCustomerWishlist({
-    variables: { customerId },
-    config,
-  })
   const options = {
     method: 'POST',
-    body: JSON.stringify(
-      wishlist
-        ? {
-            items: [parseWishlistItem(item)],
-          }
-        : {
-            customer_id: customerId,
-            items: [parseWishlistItem(item)],
-          }
-    ),
+    body: JSON.stringify({
+      items: [item],
+    }),
   }
-  const { data } = wishlist
-    ? await config.storeApiFetch(`/v3/wishlists/${wishlist.id}/items`, options)
-    : await config.storeApiFetch('/v3/wishlists', options)
+  const { data } = await config.storeApiFetch(
+    `/v3/wishlists/${wishlistId}/items`,
+    options
+  )
 
   res.status(200).json({ data })
 }

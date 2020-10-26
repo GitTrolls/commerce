@@ -23,23 +23,23 @@ export function extendHook(
   swrOptions?: SwrOptions<Cart | null, CartInput>
 ) {
   const useCart = () => {
-    const response = useCommerceCart(defaultOpts, [], customFetcher, {
+    const cart = useCommerceCart(defaultOpts, [], customFetcher, {
       revalidateOnFocus: false,
       ...swrOptions,
     })
 
     // Uses a getter to only calculate the prop when required
-    // response.data is also a getter and it's better to not trigger it early
-    Object.defineProperty(response, 'isEmpty', {
+    // cart.data is also a getter and it's better to not trigger it early
+    Object.defineProperty(cart, 'isEmpty', {
       get() {
-        return Object.values(response.data?.line_items ?? {}).every(
+        return Object.values(cart.data?.line_items ?? {}).every(
           (items) => !items.length
         )
       },
       set: (x) => x,
     })
 
-    return response
+    return cart
   }
 
   useCart.extend = extendHook
