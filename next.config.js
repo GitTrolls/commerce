@@ -12,6 +12,14 @@ module.exports = {
   rewrites() {
     return [
       {
+        source: '/:locale/search',
+        destination: '/search',
+      },
+      {
+        source: '/:locale/search/:path*',
+        destination: '/search',
+      },
+      {
         source: '/search/designers/:name',
         destination: '/search',
       },
@@ -19,6 +27,7 @@ module.exports = {
         source: '/search/designers/:name/:category',
         destination: '/search',
       },
+      // Search
       {
         // This rewrite will also handle `/search/designers`
         source: '/search/:category',
