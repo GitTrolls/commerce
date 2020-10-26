@@ -1,11 +1,11 @@
 import cn from 'classnames'
-import { FC, useRef } from 'react'
-import s from './Modal.module.css'
+import { FC, useRef, useEffect, useCallback } from 'react'
+import s from './Toast.module.css'
 import { useDialog } from '@react-aria/dialog'
 import { FocusScope } from '@react-aria/focus'
 import { Transition } from '@headlessui/react'
 import { useOverlay, useModal, OverlayContainer } from '@react-aria/overlays'
-import { Cross } from '@components/icons'
+
 interface Props {
   className?: string
   children?: any
@@ -13,7 +13,7 @@ interface Props {
   onClose: () => void
 }
 
-const Modal: FC<Props> = ({
+const Toast: FC<Props> = ({
   className,
   children,
   open = false,
@@ -27,12 +27,18 @@ const Modal: FC<Props> = ({
   let { overlayProps } = useOverlay(
     {
       isOpen: open,
-      isDismissable: false,
+      isDismissable: true,
       onClose: onClose,
       ...props,
     },
     ref
   )
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     useCallback(onClose, [])
+  //   }, 400)
+  // })
 
   return (
     <Transition show={open}>
@@ -48,22 +54,12 @@ const Modal: FC<Props> = ({
               leaveTo="opacity-0"
             >
               <div
-                className={s.modal}
+                className={s.toast}
                 {...overlayProps}
                 {...dialogProps}
                 {...modalProps}
                 ref={ref}
               >
-                <div className="h-7 flex items-center justify-end w-full">
-                  <button
-                    onClick={() => onClose()}
-                    aria-label="Close panel"
-                    className="hover:text-gray-500 transition ease-in-out duration-150 focus:outline-none"
-                  >
-                    <Cross className="h-6 w-6" />
-                  </button>
-                </div>
-
                 {children}
               </div>
             </Transition.Child>
@@ -74,4 +70,4 @@ const Modal: FC<Props> = ({
   )
 }
 
-export default Modal
+export default Toast

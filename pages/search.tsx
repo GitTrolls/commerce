@@ -40,10 +40,7 @@ export default function Search({
   const router = useRouter()
   const { asPath } = router
   const { q, sort } = router.query
-  // `q` can be included but because categories and designers can't be searched
-  // in the same way of products, it's better to ignore the search input if one
-  // of those is selected
-  const query = filterQuery({ sort })
+  const query = filterQuery({ q, sort })
 
   const { pathname, category, brand } = useSearchMeta(asPath)
   const activeCategory = categories.find(
@@ -79,7 +76,7 @@ export default function Search({
               >
                 <Link
                   href={{
-                    pathname: getCategoryPath(cat.path, brand),
+                    pathname: getCategoryPath(getSlug(cat.path), brand),
                     query,
                   }}
                 >
@@ -103,7 +100,7 @@ export default function Search({
               >
                 <Link
                   href={{
-                    pathname: getDesignerPath(node.path, category),
+                    pathname: getDesignerPath(getSlug(node.path), category),
                     query,
                   }}
                 >
@@ -114,50 +111,33 @@ export default function Search({
           </ul>
         </div>
         <div className="col-span-8">
-          {(q || activeCategory || activeBrand) && (
-            <div className="mb-12 transition ease-in duration-75">
-              {data ? (
-                <>
-                  <span
-                    className={cn('animated', {
-                      fadeIn: data.found,
-                      hidden: !data.found,
-                    })}
-                  >
-                    Showing {data.products.length} results{' '}
-                    {q && (
-                      <>
-                        for "<strong>{q}</strong>"
-                      </>
-                    )}
-                  </span>
-                  <span
-                    className={cn('animated', {
-                      fadeIn: !data.found,
-                      hidden: data.found,
-                    })}
-                  >
-                    {q ? (
-                      <>
-                        There are no products that match "<strong>{q}</strong>"
-                      </>
-                    ) : (
-                      <>
-                        There are no products that match the selected category &
-                        designer
-                      </>
-                    )}
-                  </span>
-                </>
-              ) : q ? (
-                <>
-                  Searching for: "<strong>{q}</strong>"
-                </>
-              ) : (
-                <>Searching...</>
-              )}
-            </div>
-          )}
+          <div className="mb-12 transition ease-in duration-75">
+            {data ? (
+              <>
+                <span
+                  className={cn('animated', {
+                    fadeIn: data.found,
+                    hidden: !data.found,
+                  })}
+                >
+                  Showing {data.products.length} results for "
+                  <strong>{q}</strong>"
+                </span>
+                <span
+                  className={cn('animated', {
+                    fadeIn: !data.found,
+                    hidden: data.found,
+                  })}
+                >
+                  There are no products that match "<strong>{q}</strong>"
+                </span>
+              </>
+            ) : (
+              <>
+                Searching for: "<strong>{q}</strong>"
+              </>
+            )}
+          </div>
 
           {data ? (
             <Grid layout="normal">

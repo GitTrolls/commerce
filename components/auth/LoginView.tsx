@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState, useCallback } from 'react'
 import { Logo, Modal, Button, Input } from '@components/ui'
 import useLogin from '@lib/bigcommerce/use-login'
 import { useUI } from '@components/ui/context'
@@ -39,7 +39,7 @@ const LoginView: FC<Props> = () => {
     }
   }
 
-  const handleValidation = () => {
+  const handleValidation = useCallback(() => {
     // Test for Alphanumeric password
     const validPassword = /^(?=.*[a-zA-Z])(?=.*[0-9])/.test(password)
 
@@ -47,11 +47,11 @@ const LoginView: FC<Props> = () => {
     if (dirty) {
       setDisabled(!validate(email) || password.length < 7 || !validPassword)
     }
-  }
+  }, [email, password, dirty])
 
   useEffect(() => {
     handleValidation()
-  }, [email, password, dirty])
+  }, [handleValidation])
 
   return (
     <div className="w-80 flex flex-col justify-between p-3">
@@ -60,11 +60,19 @@ const LoginView: FC<Props> = () => {
       </div>
       <div className="flex flex-col space-y-3">
         {message && (
-          <div className="text-red border border-red p-3">{message}</div>
+          <div className="text-red border border-red p-3">
+            {message}. Did you {` `}
+            <a
+              className="text-accent-9 inline font-bold hover:underline cursor-pointer"
+              onClick={() => setModalView('FORGOT_VIEW')}
+            >
+              forgot your password?
+            </a>
+          </div>
         )}
-
         <Input placeholder="Email" onChange={setEmail} />
         <Input placeholder="Password" onChange={setPassword} />
+
         <Button
           variant="slim"
           onClick={() => handleLogin()}
@@ -73,7 +81,7 @@ const LoginView: FC<Props> = () => {
         >
           Log In
         </Button>
-        <span className="pt-3 text-center text-sm">
+        <div className="pt-1 text-center text-sm">
           <span className="text-accents-7">Don't have an account?</span>
           {` `}
           <a
@@ -82,7 +90,7 @@ const LoginView: FC<Props> = () => {
           >
             Sign Up
           </a>
-        </span>
+        </div>
       </div>
     </div>
   )
