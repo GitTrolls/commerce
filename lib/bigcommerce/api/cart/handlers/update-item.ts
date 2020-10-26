@@ -1,4 +1,4 @@
-import { parseCartItem } from '../../utils/parse-item'
+import parseItem from '../../utils/parse-item'
 import getCartCookie from '../../utils/get-cart-cookie'
 import type { CartHandlers } from '..'
 
@@ -20,7 +20,7 @@ const updateItem: CartHandlers['updateItem'] = async ({
     {
       method: 'PUT',
       body: JSON.stringify({
-        line_item: parseCartItem(item),
+        line_item: parseItem(item),
       }),
     }
   )
