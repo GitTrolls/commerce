@@ -13,6 +13,8 @@ import removeWishlist from './handlers/remove-wishlist'
 import addWishlist from './handlers/add-wishlist'
 import { definitions } from '../definitions/wishlist'
 
+type Body<T> = Partial<T> | undefined
+
 export type ItemBody = {
   productId: number
   variantId: number
@@ -20,7 +22,7 @@ export type ItemBody = {
 
 export type AddItemBody = { item: ItemBody }
 
-export type RemoveItemBody = { itemId: string }
+export type RemoveItemBody = { wishlistId: string; itemId: string }
 
 export type WishlistBody = {
   customer_id: number
@@ -38,19 +40,19 @@ export type WishlistHandlers = {
   getWishlist: BigcommerceHandler<Wishlist, { customerToken?: string }>
   addWishlist: BigcommerceHandler<
     Wishlist,
-    { wishlistId: string } & Partial<AddWishlistBody>
+    { wishlistId: string } & Body<AddWishlistBody>
   >
   updateWishlist: BigcommerceHandler<
     Wishlist,
-    { wishlistId: string } & Partial<AddWishlistBody>
+    { wishlistId: string } & Body<AddWishlistBody>
   >
   addItem: BigcommerceHandler<
     Wishlist,
-    { customerToken?: string } & Partial<AddItemBody>
+    { customerToken?: string } & Body<AddItemBody>
   >
   removeItem: BigcommerceHandler<
     Wishlist,
-    { customerToken?: string } & Partial<RemoveItemBody>
+    { wishlistId: string } & Body<RemoveItemBody>
   >
   removeWishlist: BigcommerceHandler<Wishlist, { wishlistId: string }>
 }
@@ -91,8 +93,11 @@ const wishlistApi: BigcommerceApiHandler<Wishlist, WishlistHandlers> = async (
     }
 
     // Remove an item from the wishlist
-    if (req.method === 'DELETE') {
-      const body = { ...req.body, customerToken }
+    if (req.method === 'DELETE' && wishlistId && itemId) {
+      const body = {
+        wishlistId: wishlistId as string,
+        itemId: itemId as string,
+      }
       return await handlers['removeItem']({ req, res, config, body })
     }
 

@@ -2,7 +2,6 @@ import React, { FC, useState } from 'react'
 import cn from 'classnames'
 import type { ProductNode } from '@lib/bigcommerce/api/operations/get-all-products'
 import useAddItem from '@lib/bigcommerce/wishlist/use-add-item'
-import useRemoveItem from '@lib/bigcommerce/wishlist/use-remove-item'
 import useWishlist from '@lib/bigcommerce/wishlist/use-wishlist'
 import useCustomer from '@lib/bigcommerce/use-customer'
 import { Heart } from '@components/icons'
@@ -20,21 +19,19 @@ const WishlistButton: FC<Props> = ({
   ...props
 }) => {
   const addItem = useAddItem()
-  const removeItem = useRemoveItem()
   const { data } = useWishlist()
   const { data: customer } = useCustomer()
   const [loading, setLoading] = useState(false)
   const { openModal, setModalView } = useUI()
-  const itemInWishlist = data?.items?.find(
+  const isInWishlist = data?.items?.some(
     (item) =>
       item.product_id === productId &&
       item.variant_id === variant?.node.entityId
   )
 
-  const handleWishlistChange = async (e: any) => {
+  const addToWishlist = async (e: any) => {
     e.preventDefault()
-
-    if (loading) return
+    setLoading(true)
 
     // A login is required before adding an item to the wishlist
     if (!customer) {
@@ -42,17 +39,11 @@ const WishlistButton: FC<Props> = ({
       return openModal()
     }
 
-    setLoading(true)
-
     try {
-      if (itemInWishlist) {
-        await removeItem({ id: itemInWishlist.id! })
-      } else {
-        await addItem({
-          productId,
-          variantId: variant?.node.entityId!,
-        })
-      }
+      await addItem({
+        productId,
+        variantId: variant?.node.entityId!,
+      })
 
       setLoading(false)
     } catch (err) {
@@ -64,9 +55,9 @@ const WishlistButton: FC<Props> = ({
     <button
       {...props}
       className={cn({ 'opacity-50': loading }, className)}
-      onClick={handleWishlistChange}
+      onClick={addToWishlist}
     >
-      <Heart fill={itemInWishlist ? 'white' : 'none'} />
+      <Heart fill={isInWishlist ? 'white' : 'none'} />
     </button>
   )
 }
