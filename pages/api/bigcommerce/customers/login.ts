@@ -1,3 +1,3 @@
-import loginApi from '@bigcommerce/storefront-data-hooks/dist/api/customers/login'
+import loginApi from '@lib/bigcommerce/api/customers/login'
 
 export default loginApi()

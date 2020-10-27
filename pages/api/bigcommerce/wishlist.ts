@@ -1,3 +1,3 @@
-import wishlistApi from '@bigcommerce/storefront-data-hooks/dist/api/wishlist'
+import wishlistApi from '@lib/bigcommerce/api/wishlist'
 
 export default wishlistApi()

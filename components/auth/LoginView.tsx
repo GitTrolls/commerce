@@ -1,6 +1,6 @@
 import { FC, useEffect, useState, useCallback } from 'react'
 import { Logo, Modal, Button, Input } from '@components/ui'
-import useLogin from '@bigcommerce/storefront-data-hooks/dist/use-login'
+import useLogin from '@lib/bigcommerce/use-login'
 import { useUI } from '@components/ui/context'
 import { validate } from 'email-validator'
 
@@ -18,9 +18,7 @@ const LoginView: FC<Props> = () => {
 
   const login = useLogin()
 
-  const handleLogin = async (e: React.SyntheticEvent<EventTarget>) => {
-    e.preventDefault()
-
+  const handleLogin = async () => {
     if (!dirty && !disabled) {
       setDirty(true)
       handleValidation()
@@ -56,10 +54,7 @@ const LoginView: FC<Props> = () => {
   }, [handleValidation])
 
   return (
-    <form
-      onSubmit={handleLogin}
-      className="w-80 flex flex-col justify-between p-3"
-    >
+    <div className="w-80 flex flex-col justify-between p-3">
       <div className="flex justify-center pb-12 ">
         <Logo width="64px" height="64px" />
       </div>
@@ -80,7 +75,7 @@ const LoginView: FC<Props> = () => {
 
         <Button
           variant="slim"
-          type="submit"
+          onClick={() => handleLogin()}
           loading={loading}
           disabled={disabled}
         >
@@ -97,7 +92,7 @@ const LoginView: FC<Props> = () => {
           </a>
         </div>
       </div>
-    </form>
+    </div>
   )
 }
 

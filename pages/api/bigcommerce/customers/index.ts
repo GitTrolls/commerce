@@ -1,3 +1,3 @@
-import customersApi from '@bigcommerce/storefront-data-hooks/dist/api/customers'
+import customersApi from '@lib/bigcommerce/api/customers'
 
 export default customersApi()

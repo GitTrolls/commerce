@@ -1,7 +1,9 @@
 import { FC, useEffect, useState, useCallback } from 'react'
 import { validate } from 'email-validator'
+import { Info } from '@components/icons'
 import { useUI } from '@components/ui/context'
 import { Logo, Button, Input } from '@components/ui'
+import useSignup from '@lib/bigcommerce/use-signup'
 
 interface Props {}
 
@@ -13,15 +15,27 @@ const ForgotPassword: FC<Props> = () => {
   const [dirty, setDirty] = useState(false)
   const [disabled, setDisabled] = useState(false)
 
+  const signup = useSignup()
   const { setModalView, closeModal } = useUI()
 
-  const handleResetPassword = async (e: React.SyntheticEvent<EventTarget>) => {
-    e.preventDefault()
-
+  const handleSignup = async () => {
     if (!dirty && !disabled) {
       setDirty(true)
       handleValidation()
     }
+
+    // try {
+    //   setLoading(true)
+    //   setMessage('')
+    //   await signup({
+    //     email,
+    //   })
+    //   setLoading(false)
+    //   closeModal()
+    // } catch ({ errors }) {
+    //   setMessage(errors[0].message)
+    //   setLoading(false)
+    // }
   }
 
   const handleValidation = useCallback(() => {
@@ -36,10 +50,7 @@ const ForgotPassword: FC<Props> = () => {
   }, [handleValidation])
 
   return (
-    <form
-      onSubmit={handleResetPassword}
-      className="w-80 flex flex-col justify-between p-3"
-    >
+    <div className="w-80 flex flex-col justify-between p-3">
       <div className="flex justify-center pb-12 ">
         <Logo width="64px" height="64px" />
       </div>
@@ -52,7 +63,7 @@ const ForgotPassword: FC<Props> = () => {
         <div className="pt-2 w-full flex flex-col">
           <Button
             variant="slim"
-            type="submit"
+            onClick={() => handleSignup()}
             loading={loading}
             disabled={disabled}
           >
@@ -71,7 +82,7 @@ const ForgotPassword: FC<Props> = () => {
           </a>
         </span>
       </div>
-    </form>
+    </div>
   )
 }
 
