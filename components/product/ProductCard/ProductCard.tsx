@@ -49,7 +49,7 @@ const ProductCard: FC<Props> = ({
               width={imgWidth}
               height={imgHeight}
               priority={priority}
-              quality="85"
+              quality="90"
             />
           </div>
         ) : (
@@ -76,7 +76,7 @@ const ProductCard: FC<Props> = ({
                 width={imgWidth}
                 height={imgHeight}
                 priority={priority}
-                quality="85"
+                quality="90"
               />
             </div>
           </>

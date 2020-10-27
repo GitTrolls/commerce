@@ -5,9 +5,9 @@
 The all-in-one starter kit for high-performance e-commerce sites. With a few clicks, Next.js developers can clone, deploy and fully own their own store.
 Start right now at nextjs.org/commerce
 
-Demo live at: [demo.vercel.store](https://demo.vercel.store/)
+Demo live at: [commerce-demo.vercel.app](https://commerce-demo.vercel.app/)
 
-This project is currently <b>under development</b>.
+This project is currently under development.
 
 ## Goals and Features
 
@@ -19,13 +19,9 @@ This project is currently <b>under development</b>.
 - Theming
 - Standarized Data Hooks
 - Integrations - Integrate seamlessly with the most common ecommerce platforms.
-- Dark Mode Support
 
 ## Work in progress
 We're using Github Projects to keep track of issues in progress and todo's. Here is our [Board](https://github.com/vercel/commerce/projects/1)
-
-## Integrations
-Next.js Commerce integrates out-of-the-box with BigCommerce. We plan to support all mayor ecommerce backends.
 
 ## Contribute
 
