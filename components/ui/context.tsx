@@ -131,12 +131,6 @@ export const UIProvider: FC = (props) => {
 
   const openSidebar = () => dispatch({ type: 'OPEN_SIDEBAR' })
   const closeSidebar = () => dispatch({ type: 'CLOSE_SIDEBAR' })
-  const toggleSidebar = () =>
-    state.displaySidebar
-      ? dispatch({ type: 'CLOSE_SIDEBAR' })
-      : dispatch({ type: 'OPEN_SIDEBAR' })
-  const closeSidebarIfPresent = () =>
-    state.displaySidebar && dispatch({ type: 'CLOSE_SIDEBAR' })
 
   const openDropdown = () => dispatch({ type: 'OPEN_DROPDOWN' })
   const closeDropdown = () => dispatch({ type: 'CLOSE_DROPDOWN' })
@@ -155,8 +149,6 @@ export const UIProvider: FC = (props) => {
       ...state,
       openSidebar,
       closeSidebar,
-      toggleSidebar,
-      closeSidebarIfPresent,
       openDropdown,
       closeDropdown,
       openModal,

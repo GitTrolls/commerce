@@ -2,10 +2,10 @@ import { FC } from 'react'
 import cn from 'classnames'
 import { UserNav } from '@components/core'
 import { Button } from '@components/ui'
-import { Bag, Cross, Check } from '@components/icons'
+import { ArrowLeft, Bag, Cross, Check } from '@components/icons'
 import { useUI } from '@components/ui/context'
-import useCart from '@bigcommerce/storefront-data-hooks/dist/cart/use-cart'
-import usePrice from '@bigcommerce/storefront-data-hooks/dist/use-price'
+import useCart from '@lib/bigcommerce/cart/use-cart'
+import usePrice from '@lib/bigcommerce/use-price'
 import CartItem from '../CartItem'
 import s from './CartSidebarView.module.css'
 
@@ -47,11 +47,11 @@ const CartSidebarView: FC = () => {
               aria-label="Close panel"
               className="hover:text-gray-500 transition ease-in-out duration-150"
             >
-              <Cross className="h-6 w-6" />
+              <ArrowLeft className="h-6 w-6" />
             </button>
           </div>
           <div className="space-y-1">
-            <UserNav className="" />
+            <UserNav />
           </div>
         </div>
       </header>

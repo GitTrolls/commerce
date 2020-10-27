@@ -4,9 +4,8 @@ import { useTheme } from 'next-themes'
 import cn from 'classnames'
 import s from './DropdownMenu.module.css'
 import { Moon, Sun } from '@components/icons'
-import { useUI } from '@components/ui/context'
 import { Menu, Transition } from '@headlessui/react'
-import useLogout from '@bigcommerce/storefront-data-hooks/dist/use-logout'
+import useLogout from '@lib/bigcommerce/use-logout'
 import { useRouter } from 'next/router'
 
 interface DropdownMenuProps {
@@ -33,8 +32,6 @@ const DropdownMenu: FC<DropdownMenuProps> = ({ open = false }) => {
   const logout = useLogout()
   const { pathname } = useRouter()
 
-  const { closeSidebarIfPresent } = useUI()
-
   return (
     <Transition
       show={open}
@@ -54,7 +51,6 @@ const DropdownMenu: FC<DropdownMenuProps> = ({ open = false }) => {
                   className={cn(s.link, {
                     [s.active]: pathname === href,
                   })}
-                  onClick={closeSidebarIfPresent}
                 >
                   {name}
                 </a>
