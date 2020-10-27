@@ -1,12 +1,11 @@
-import { ChangeEvent, useEffect, useState } from 'react'
-import cn from 'classnames'
+import s from './CartItem.module.css'
 import Image from 'next/image'
 import Link from 'next/link'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { Trash, Plus, Minus } from '@components/icons'
-import usePrice from '@lib/bigcommerce/use-price'
-import useUpdateItem from '@lib/bigcommerce/cart/use-update-item'
-import useRemoveItem from '@lib/bigcommerce/cart/use-remove-item'
-import s from './CartItem.module.css'
+import usePrice from '@bigcommerce/storefront-data-hooks/dist/use-price'
+import useUpdateItem from '@bigcommerce/storefront-data-hooks/dist/cart/use-update-item'
+import useRemoveItem from '@bigcommerce/storefront-data-hooks/dist/cart/use-remove-item'
 
 const CartItem = ({
   item,
@@ -23,9 +22,8 @@ const CartItem = ({
   const updateItem = useUpdateItem(item)
   const removeItem = useRemoveItem()
   const [quantity, setQuantity] = useState(item.quantity)
-  const [removing, setRemoving] = useState(false)
   const updateQuantity = async (val: number) => {
-    await updateItem({ quantity: val })
+    const data = await updateItem({ quantity: val })
   }
   const handleQuantity = (e: ChangeEvent<HTMLInputElement>) => {
     const val = Number(e.target.value)
@@ -49,17 +47,6 @@ const CartItem = ({
       updateQuantity(val)
     }
   }
-  const handleRemove = async () => {
-    setRemoving(true)
-
-    try {
-      // If this action succeeds then there's no need to do `setRemoving(true)`
-      // because the component will be removed from the view
-      await removeItem({ id: item.id })
-    } catch (error) {
-      setRemoving(false)
-    }
-  }
 
   useEffect(() => {
     // Reset the quantity state if the item quantity changes
@@ -69,11 +56,7 @@ const CartItem = ({
   }, [item.quantity])
 
   return (
-    <li
-      className={cn('flex flex-row space-x-8 py-8', {
-        'opacity-75 pointer-events-none': removing,
-      })}
-    >
+    <li className="flex flex-row space-x-8 py-8">
       <div className="w-16 h-16 bg-violet relative overflow-hidden">
         <Image
           className={s.productImage}
@@ -113,7 +96,10 @@ const CartItem = ({
       </div>
       <div className="flex flex-col justify-between space-y-2 text-base">
         <span>{price}</span>
-        <button className="flex justify-end" onClick={handleRemove}>
+        <button
+          className="flex justify-end"
+          onClick={() => removeItem({ id: item.id })}
+        >
           <Trash />
         </button>
       </div>
