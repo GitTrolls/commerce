@@ -3,8 +3,8 @@ import {
   CommerceConfig,
   CommerceProvider as CoreCommerceProvider,
   useCommerce as useCoreCommerce,
-} from '../commerce'
-import { FetcherError } from '../commerce/utils/errors'
+} from 'lib/commerce'
+import { FetcherError } from '@lib/commerce/utils/errors'
 
 async function getText(res: Response) {
   try {

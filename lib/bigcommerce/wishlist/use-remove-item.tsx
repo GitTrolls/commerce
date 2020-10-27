@@ -1,55 +1,45 @@
 import { useCallback } from 'react'
-import { HookFetcher } from '../../commerce/utils/types'
-import { CommerceError } from '../../commerce/utils/errors'
-import useWishlistRemoveItem from '../../commerce/wishlist/use-remove-item'
+import { HookFetcher } from '@lib/commerce/utils/types'
+import useAction from '@lib/commerce/utils/use-action'
 import type { RemoveItemBody } from '../api/wishlist'
-import useCustomer from '../use-customer'
 import useWishlist, { Wishlist } from './use-wishlist'
 
 const defaultOpts = {
-  url: '/api/bigcommerce/wishlist',
+  url: '/api/bigcommerce/wishlists',
   method: 'DELETE',
 }
 
 export type RemoveItemInput = {
-  id: string | number
+  id: string
 }
 
 export const fetcher: HookFetcher<Wishlist | null, RemoveItemBody> = (
   options,
-  { itemId },
+  { wishlistId, itemId },
   fetch
 ) => {
   return fetch({
     ...defaultOpts,
     ...options,
-    body: { itemId },
+    body: { wishlistId, itemId },
   })
 }
 
 export function extendHook(customFetcher: typeof fetcher) {
-  const useRemoveItem = () => {
-    const { data: customer } = useCustomer()
-    const { mutate } = useWishlist()
-    const fn = useWishlistRemoveItem<Wishlist | null, RemoveItemBody>(
+  const useRemoveItem = (wishlistId: string, item?: any) => {
+    const { mutate } = useWishlist(wishlistId)
+    const fn = useAction<Wishlist | null, RemoveItemBody>(
       defaultOpts,
       customFetcher
     )
 
     return useCallback(
       async function removeItem(input: RemoveItemInput) {
-        if (!customer) {
-          // A signed customer is required in order to have a wishlist
-          throw new CommerceError({
-            message: 'Signed customer not found',
-          })
-        }
-
-        const data = await fn({ itemId: String(input.id) })
+        const data = await fn({ wishlistId, itemId: input.id ?? item?.id })
         await mutate(data, false)
         return data
       },
-      [fn, mutate, customer]
+      [fn, mutate]
     )
   }
 

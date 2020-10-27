@@ -41,7 +41,7 @@ export default async function fetchStoreApi<T>(
     throw new BigcommerceApiError(msg, res, data)
   }
 
-  if (res.status !== 204 && !isJSON) {
+  if (!isJSON) {
     throw new BigcommerceApiError(
       `Fetch to Bigcommerce API failed, expected JSON content but found: ${contentType}`,
       res

@@ -1,13 +1,9 @@
-import type { ItemBody as WishlistItemBody } from '../wishlist'
 import type { ItemBody } from '../cart'
 
-export const parseWishlistItem = (item: WishlistItemBody) => ({
-  product_id: item.productId,
-  variant_id: item.variantId,
-})
-
-export const parseCartItem = (item: ItemBody) => ({
+const parseItem = (item: ItemBody) => ({
   quantity: item.quantity,
   product_id: item.productId,
   variant_id: item.variantId,
 })
+
+export default parseItem
