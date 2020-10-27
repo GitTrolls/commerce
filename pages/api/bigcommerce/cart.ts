@@ -1,3 +1,3 @@
-import cartApi from '@bigcommerce/storefront-data-hooks/dist/api/cart'
+import cartApi from '@lib/bigcommerce/api/cart'
 
 export default cartApi()
