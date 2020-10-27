@@ -70,7 +70,7 @@ const ProductCard: FC<Props> = ({
             variant={p.variants.edges?.[0]!}
           />
         </div>
-        <div className={s.imageContainer}>
+        <div className={cn(s.imageContainer)}>
           <EnhancedImage
             alt={p.name}
             className={cn('w-full object-cover', s['product-image'])}
