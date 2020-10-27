@@ -7,8 +7,8 @@ import { Avatar } from '@components/core'
 import { useUI } from '@components/ui/context'
 import DropdownMenu from './DropdownMenu'
 import { Menu } from '@headlessui/react'
-import useCart from '@lib/bigcommerce/cart/use-cart'
-import useCustomer from '@lib/bigcommerce/use-customer'
+import useCart from '@bigcommerce/storefront-data-hooks/dist/cart/use-cart'
+import useCustomer from '@bigcommerce/storefront-data-hooks/dist/use-customer'
 interface Props {
   className?: string
 }
@@ -21,21 +21,18 @@ const UserNav: FC<Props> = ({ className, children, ...props }) => {
   const { data } = useCart()
   const { data: customer } = useCustomer()
 
-  const { openSidebar, closeSidebar, displaySidebar, openModal } = useUI()
+  const { toggleSidebar, closeSidebarIfPresent, openModal } = useUI()
   const itemsCount = Object.values(data?.line_items ?? {}).reduce(countItems, 0)
   return (
     <nav className={cn(s.root, className)}>
       <div className={s.mainContainer}>
         <ul className={s.list}>
-          <li
-            className={s.item}
-            onClick={(e) => (displaySidebar ? closeSidebar() : openSidebar())}
-          >
+          <li className={s.item} onClick={toggleSidebar}>
             <Bag />
             {itemsCount > 0 && <span className={s.bagCount}>{itemsCount}</span>}
           </li>
           <Link href="/wishlist">
-            <li className={s.item}>
+            <li className={s.item} onClick={closeSidebarIfPresent}>
               <Heart />
             </li>
           </Link>
