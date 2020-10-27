@@ -52,7 +52,7 @@ const ProductCard: FC<Props> = ({
   }
 
   return (
-    <Link href={`product${p.path}`}>
+    <Link href={`/product${p.path}`}>
       <a
         className={cn(s.root, { [s.simple]: variant === 'simple' }, className)}
       >
@@ -70,15 +70,17 @@ const ProductCard: FC<Props> = ({
             variant={p.variants.edges?.[0]!}
           />
         </div>
-        <EnhancedImage
-          alt={p.name}
-          className="w-full object-cover"
-          src={src}
-          width={imgWidth}
-          height={imgHeight}
-          priority={priority}
-          quality="90"
-        />
+        <div className={cn(s.imageContainer)}>
+          <EnhancedImage
+            alt={p.name}
+            className={cn('w-full object-cover', s['product-image'])}
+            src={src}
+            width={imgWidth}
+            height={imgHeight}
+            priority={priority}
+            quality="90"
+          />
+        </div>
       </a>
     </Link>
   )
