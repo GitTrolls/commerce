@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react'
+import React, { FC } from 'react'
 import { ThemeProvider } from 'next-themes'
 import { SSRProvider, OverlayProvider } from 'react-aria'
 
@@ -144,21 +144,18 @@ export const UIProvider: FC = (props) => {
   const setModalView = (view: MODAL_VIEWS) =>
     dispatch({ type: 'SET_MODAL_VIEW', view })
 
-  const value = useMemo(
-    () => ({
-      ...state,
-      openSidebar,
-      closeSidebar,
-      openDropdown,
-      closeDropdown,
-      openModal,
-      closeModal,
-      setModalView,
-      openToast,
-      closeToast,
-    }),
-    [state]
-  )
+  const value = {
+    ...state,
+    openSidebar,
+    closeSidebar,
+    openDropdown,
+    closeDropdown,
+    openModal,
+    closeModal,
+    setModalView,
+    openToast,
+    closeToast,
+  }
 
   return <UIContext.Provider value={value} {...props} />
 }
