@@ -9,6 +9,8 @@ import addItem from './handlers/add-item'
 import updateItem from './handlers/update-item'
 import removeItem from './handlers/remove-item'
 
+type Body<T> = Partial<T> | undefined
+
 export type ItemBody = {
   productId: number
   variantId: number
@@ -44,14 +46,14 @@ export type Cart = {
 
 export type CartHandlers = {
   getCart: BigcommerceHandler<Cart, { cartId?: string }>
-  addItem: BigcommerceHandler<Cart, { cartId?: string } & Partial<AddItemBody>>
+  addItem: BigcommerceHandler<Cart, { cartId?: string } & Body<AddItemBody>>
   updateItem: BigcommerceHandler<
     Cart,
-    { cartId?: string } & Partial<UpdateItemBody>
+    { cartId?: string } & Body<UpdateItemBody>
   >
   removeItem: BigcommerceHandler<
     Cart,
-    { cartId?: string } & Partial<RemoveItemBody>
+    { cartId?: string } & Body<RemoveItemBody>
   >
 }
 

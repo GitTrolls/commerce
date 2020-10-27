@@ -1,34 +1,20 @@
-import getCustomerId from '../../operations/get-customer-id'
-import getCustomerWishlist, {
-  Wishlist,
-} from '../../operations/get-customer-wishlist'
 import type { WishlistHandlers } from '..'
 
 // Return current wishlist info
 const removeItem: WishlistHandlers['removeItem'] = async ({
   res,
-  body: { customerToken, itemId },
+  body: { wishlistId, itemId },
   config,
 }) => {
-  const customerId =
-    customerToken && (await getCustomerId({ customerToken, config }))
-  const { wishlist } =
-    (customerId &&
-      (await getCustomerWishlist({
-        variables: { customerId },
-        config,
-      }))) ||
-    {}
-
-  if (!wishlist || !itemId) {
+  if (!wishlistId || !itemId) {
     return res.status(400).json({
       data: null,
       errors: [{ message: 'Invalid request' }],
     })
   }
 
-  const result = await config.storeApiFetch<{ data: Wishlist } | null>(
-    `/v3/wishlists/${wishlist.id}/items/${itemId}`,
+  const result = await config.storeApiFetch<{ data: any } | null>(
+    `/v3/wishlists/${wishlistId}/items/${itemId}`,
     { method: 'DELETE' }
   )
   const data = result?.data ?? null
