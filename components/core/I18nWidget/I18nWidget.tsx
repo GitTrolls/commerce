@@ -6,47 +6,21 @@ import { Menu } from '@headlessui/react'
 import { DoubleChevron } from '@components/icons'
 import s from './I18nWidget.module.css'
 
-interface LOCALE_DATA {
-  name: string
-  img: {
-    filename: string
-    alt: string
-  }
-}
-
-const LOCALES_MAP: Record<string, LOCALE_DATA> = {
-  es: {
-    name: 'Español',
-    img: {
-      filename: 'flag-es.svg',
-      alt: 'Bandera española',
-    },
-  },
-  'en-US': {
-    name: 'English',
-    img: {
-      filename: 'flag-en-us.svg',
-      alt: 'US Flag',
-    },
-  },
+const LOCALES_MAP: Record<string, string> = {
+  es: 'Español',
+  'en-US': 'English',
 }
 
 const I18nWidget: FC = () => {
   const { locale, locales, defaultLocale = 'en-US' } = useRouter()
   const options = locales?.filter((val) => val !== locale)
 
-  const currentLocale = locale || defaultLocale
-
   return (
     <nav className={s.root}>
       <Menu>
         <Menu.Button className={s.button} aria-label="Language selector">
-          <img
-            className="block mr-2 w-5"
-            src={`/${LOCALES_MAP[currentLocale].img.filename}`}
-            alt={LOCALES_MAP[currentLocale].img.alt}
-          />
-          <span className="mr-2">{LOCALES_MAP[currentLocale].name}</span>
+          <img className="mr-2" src="/flag-us.png" alt="US Flag" />
+          <span className="mr-2">{LOCALES_MAP[locale || defaultLocale]}</span>
           {options && (
             <span>
               <DoubleChevron />
@@ -61,7 +35,7 @@ const I18nWidget: FC = () => {
                 {({ active }) => (
                   <Link href="/" locale={locale}>
                     <a className={cn(s.item, { [s.active]: active })}>
-                      {LOCALES_MAP[locale].name}
+                      {LOCALES_MAP[locale]}
                     </a>
                   </Link>
                 )}
