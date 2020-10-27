@@ -1,5 +1,8 @@
 import type { ServerResponse } from 'http'
-import type { LoginMutation, LoginMutationVariables } from '../../schema'
+import type {
+  LoginMutation,
+  LoginMutationVariables,
+} from 'lib/bigcommerce/schema'
 import type { RecursivePartial } from '../utils/types'
 import concatHeader from '../utils/concat-cookie'
 import { BigcommerceConfig, getConfig } from '..'
