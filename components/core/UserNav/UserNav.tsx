@@ -5,7 +5,7 @@ import useCart from '@bigcommerce/storefront-data-hooks/cart/use-cart'
 import useCustomer from '@bigcommerce/storefront-data-hooks/use-customer'
 import { Menu } from '@headlessui/react'
 import { Heart, Bag } from '@components/icons'
-import { Avatar } from '@components/common'
+import { Avatar } from '@components/core'
 import { useUI } from '@components/ui/context'
 import DropdownMenu from './DropdownMenu'
 import s from './UserNav.module.css'
@@ -34,7 +34,7 @@ const UserNav: FC<Props> = ({ className, children, ...props }) => {
           </li>
           <li className={s.item}>
             <Link href="/wishlist">
-              <a onClick={closeSidebarIfPresent} aria-label="Wishlist">
+              <a onClick={closeSidebarIfPresent}>
                 <Heart />
               </a>
             </Link>

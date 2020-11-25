@@ -5,11 +5,11 @@ const Info = ({ ...props }) => {
       width="24"
       height="24"
       stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       fill="none"
-      shapeRendering="geometricPrecision"
+      shape-rendering="geometricPrecision"
       {...props}
     >
       <circle cx="12" cy="12" r="10" fill="transparent" />

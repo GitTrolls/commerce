@@ -2,7 +2,6 @@ import cn from 'classnames'
 import s from './Marquee.module.css'
 import { FC, ReactNode, Component } from 'react'
 import Ticker from 'react-ticker'
-import { useInView } from 'react-intersection-observer'
 
 interface Props {
   className?: string
@@ -10,11 +9,7 @@ interface Props {
   variant?: 'primary' | 'secondary'
 }
 
-const Maquee: FC<Props> = ({
-  className = '',
-  children,
-  variant = 'primary',
-}) => {
+const M: FC<Props> = ({ className = '', children, variant = 'primary' }) => {
   const rootClassName = cn(
     s.root,
     {
@@ -23,20 +18,14 @@ const Maquee: FC<Props> = ({
     },
     className
   )
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    rootMargin: '200px 0px',
-  })
 
   return (
-    <div className={rootClassName} ref={ref}>
-      {inView ? (
-        <Ticker offset={80}>
-          {() => <div className={s.container}>{children}</div>}
-        </Ticker>
-      ) : null}
+    <div className={rootClassName}>
+      <Ticker offset={80}>
+        {({ index }) => <div className={s.container}>{children}</div>}
+      </Ticker>
     </div>
   )
 }
 
-export default Maquee
+export default M

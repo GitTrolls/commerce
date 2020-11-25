@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import cn from 'classnames'
-import { UserNav } from '@components/common'
+import { UserNav } from '@components/core'
 import { Button } from '@components/ui'
 import { Bag, Cross, Check } from '@components/icons'
 import { useUI } from '@components/ui/context'
@@ -10,7 +10,6 @@ import CartItem from '../CartItem'
 import s from './CartSidebarView.module.css'
 
 const CartSidebarView: FC = () => {
-  const { closeSidebar } = useUI()
   const { data, isEmpty } = useCart()
   const { price: subTotal } = usePrice(
     data && {
@@ -24,6 +23,7 @@ const CartSidebarView: FC = () => {
       currencyCode: data.currency.code,
     }
   )
+  const { closeSidebar } = useUI()
   const handleClose = () => closeSidebar()
 
   const items = data?.line_items.physical_items ?? []

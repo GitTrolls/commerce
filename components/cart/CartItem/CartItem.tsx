@@ -97,17 +97,15 @@ const CartItem = ({
           <button type="button" onClick={() => increaseQuantity(-1)}>
             <Minus width={18} height={18} />
           </button>
-          <label>
-            <input
-              type="number"
-              max={99}
-              min={0}
-              className={s.quantity}
-              value={quantity}
-              onChange={handleQuantity}
-              onBlur={handleBlur}
-            />
-          </label>
+          <input
+            type="number"
+            max={99}
+            min={0}
+            className={s.quantity}
+            value={quantity}
+            onChange={handleQuantity}
+            onBlur={handleBlur}
+          />
           <button type="button" onClick={() => increaseQuantity(1)}>
             <Plus width={18} height={18} />
           </button>
