@@ -3,14 +3,12 @@ import type {
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from 'next'
-import getSlug from '@lib/get-slug'
-import { missingLocaleInPages } from '@lib/usage-warns'
-import { Layout } from '@components/common'
-import { Text } from '@components/ui'
 import { getConfig } from '@bigcommerce/storefront-data-hooks/api'
 import getPage from '@bigcommerce/storefront-data-hooks/api/operations/get-page'
 import getAllPages from '@bigcommerce/storefront-data-hooks/api/operations/get-all-pages'
-import { defatultPageProps } from '@lib/defaults'
+import getSlug from '@lib/get-slug'
+import { missingLocaleInPages } from '@lib/usage-warns'
+import { Layout, HTMLContent } from '@components/common'
 
 export async function getStaticProps({
   preview,
@@ -34,7 +32,7 @@ export async function getStaticProps({
   }
 
   return {
-    props: { ...defatultPageProps, pages, page },
+    props: { pages, page },
     revalidate: 60 * 60, // Every hour
   }
 }
@@ -66,7 +64,7 @@ export default function Pages({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div className="max-w-2xl mx-auto py-20">
-      {page?.body && <Text html={page.body} />}
+      {page?.body && <HTMLContent html={page.body} />}
     </div>
   )
 }

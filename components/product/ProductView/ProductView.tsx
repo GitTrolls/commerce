@@ -6,7 +6,8 @@ import { NextSeo } from 'next-seo'
 import s from './ProductView.module.css'
 import { useUI } from '@components/ui/context'
 import { Swatch, ProductSlider } from '@components/product'
-import { Button, Container, Text } from '@components/ui'
+import { Button, Container } from '@components/ui'
+import { HTMLContent } from '@components/common'
 
 import usePrice from '@bigcommerce/storefront-data-hooks/use-price'
 import useAddItem from '@bigcommerce/storefront-data-hooks/cart/use-add-item'
@@ -136,7 +137,7 @@ const ProductView: FC<Props> = ({ product }) => {
             ))}
 
             <div className="pb-14 break-words w-full max-w-xl">
-              <Text html={product.description} />
+              <HTMLContent html={product.description} />
             </div>
           </section>
           <div>

@@ -51,7 +51,8 @@ export async function getStaticPaths({ locales }: GetStaticPathsContext) {
           return arr
         }, [])
       : products.map((product) => `/product${product.node.path}`),
-    fallback: 'unstable_blocking',
+    // If your store has tons of products, enable fallback mode to improve build times!
+    fallback: false,
   }
 }
 
