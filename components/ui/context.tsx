@@ -1,5 +1,6 @@
 import React, { FC, useMemo } from 'react'
 import { ThemeProvider } from 'next-themes'
+import { SSRProvider, OverlayProvider } from 'react-aria'
 
 export interface State {
   displaySidebar: boolean
@@ -180,6 +181,10 @@ export const useUI = () => {
 
 export const ManagedUIContext: FC = ({ children }) => (
   <UIProvider>
-    <ThemeProvider>{children}</ThemeProvider>
+    <ThemeProvider>
+      <SSRProvider>
+        <OverlayProvider>{children}</OverlayProvider>
+      </SSRProvider>
+    </ThemeProvider>
   </UIProvider>
 )
