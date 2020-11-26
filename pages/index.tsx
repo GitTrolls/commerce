@@ -1,14 +1,14 @@
-import { useMemo } from 'react'
+import rangeMap from '@lib/range-map'
+import { Layout } from '@components/common'
+import { ProductCard } from '@components/product'
+import { Grid, Marquee, Hero } from '@components/ui'
+import HomeAllProductsGrid from '@components/common/HomeAllProductsGrid'
 import type { GetStaticPropsContext, InferGetStaticPropsType } from 'next'
+
 import { getConfig } from '@bigcommerce/storefront-data-hooks/api'
 import getAllProducts from '@bigcommerce/storefront-data-hooks/api/operations/get-all-products'
 import getSiteInfo from '@bigcommerce/storefront-data-hooks/api/operations/get-site-info'
 import getAllPages from '@bigcommerce/storefront-data-hooks/api/operations/get-all-pages'
-import rangeMap from '@lib/range-map'
-import { Layout } from '@components/core'
-import { Grid, Marquee, Hero } from '@components/ui'
-import { ProductCard } from '@components/product'
-import HomeAllProductsGrid from '@components/core/HomeAllProductsGrid'
 
 export async function getStaticProps({
   preview,
@@ -16,47 +16,33 @@ export async function getStaticProps({
 }: GetStaticPropsContext) {
   const config = getConfig({ locale })
 
+  // Get Featured Products
   const { products: featuredProducts } = await getAllProducts({
     variables: { field: 'featuredProducts', first: 6 },
     config,
     preview,
   })
+
+  // Get Best Selling Products
   const { products: bestSellingProducts } = await getAllProducts({
     variables: { field: 'bestSellingProducts', first: 6 },
     config,
     preview,
   })
+
+  // Get Best Newest Products
   const { products: newestProducts } = await getAllProducts({
     variables: { field: 'newestProducts', first: 12 },
     config,
     preview,
   })
+
   const { categories, brands } = await getSiteInfo({ config, preview })
   const { pages } = await getAllPages({ config, preview })
 
-  return {
-    props: {
-      featuredProducts,
-      bestSellingProducts,
-      newestProducts,
-      categories,
-      brands,
-      pages,
-    },
-    revalidate: 10,
-  }
-}
-
-const nonNullable = (v: any) => v
-
-export default function Home({
-  featuredProducts,
-  bestSellingProducts,
-  newestProducts,
-  categories,
-  brands,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { featured, bestSelling } = useMemo(() => {
+  // These are the products that are going to be displayed in the landing.
+  // We prefer to do the computation at buildtime/servertime
+  const { featured, bestSelling } = (() => {
     // Create a copy of products that we can mutate
     const products = [...newestProducts]
     // If the lists of featured and best selling products don't have enough
@@ -72,8 +58,30 @@ export default function Home({
         (i) => bestSellingProducts[i] ?? products.shift()
       ).filter(nonNullable),
     }
-  }, [newestProducts, featuredProducts, bestSellingProducts])
+  })()
 
+  return {
+    props: {
+      featured,
+      bestSelling,
+      newestProducts,
+      categories,
+      brands,
+      pages,
+    },
+    revalidate: 14400,
+  }
+}
+
+const nonNullable = (v: any) => v
+
+export default function Home({
+  featured,
+  bestSelling,
+  brands,
+  categories,
+  newestProducts,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div>
       <Grid>
@@ -81,10 +89,10 @@ export default function Home({
           <ProductCard
             key={node.path}
             product={node}
-            // The first image is the largest one in the grid
-            imgWidth={i === 0 ? 1600 : 820}
-            imgHeight={i === 0 ? 1600 : 820}
-            priority
+            imgWidth={i === 0 ? 1080 : 540}
+            imgHeight={i === 0 ? 1080 : 540}
+            imgPriority
+            imgLoading="eager"
           />
         ))}
       </Grid>
@@ -96,6 +104,7 @@ export default function Home({
             variant="slim"
             imgWidth={320}
             imgHeight={320}
+            imgLayout="fixed"
           />
         ))}
       </Marquee>
@@ -114,9 +123,8 @@ export default function Home({
           <ProductCard
             key={node.path}
             product={node}
-            // The second image is the largest one in the grid
-            imgWidth={i === 1 ? 1600 : 820}
-            imgHeight={i === 1 ? 1600 : 820}
+            imgWidth={i === 1 ? 1080 : 540}
+            imgHeight={i === 1 ? 1080 : 540}
           />
         ))}
       </Grid>
@@ -128,6 +136,7 @@ export default function Home({
             variant="slim"
             imgWidth={320}
             imgHeight={320}
+            imgLayout="fixed"
           />
         ))}
       </Marquee>
