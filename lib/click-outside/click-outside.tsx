@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, MouseEvent } from 'react'
+import React, { forwardRef, useEffect, Ref, MouseEvent } from 'react'
 import hasParent from './has-parent'
 
 interface ClickOutsideProps {
@@ -7,12 +7,18 @@ interface ClickOutsideProps {
   children: any
 }
 
-const ClickOutside = ({ active = true, onClick, children }: ClickOutsideProps) => {
-    const innerRef = useRef()
+const ClickOutside = forwardRef(
+  (
+    { active = true, onClick, children }: ClickOutsideProps,
+    ref: Ref<HTMLDivElement> | null | any = {}
+  ) => {
+    const innerRef = ref?.current
 
     const handleClick = (event: any) => {
-      if (!hasParent(event.target, innerRef?.current)) {
+      if (!hasParent(event.target, innerRef)) {
         if (typeof onClick === 'function') {
+          event.preventDefault()
+          event.stopImmediatePropagation()
           onClick(event)
         }
       }
@@ -32,7 +38,8 @@ const ClickOutside = ({ active = true, onClick, children }: ClickOutsideProps) =
       }
     })
 
-    return React.cloneElement(children, { ref: innerRef })
+    return React.cloneElement(children, { ref })
   }
+)
 
 export default ClickOutside

@@ -53,7 +53,6 @@ module.exports = bundleAnalyzer({
         // This rewrite will also handle `/search/designers`
         source: '/search/:category',
         destination: '/search',
-        locale: false
       },
     ]
   },
