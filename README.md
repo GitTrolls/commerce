@@ -31,6 +31,7 @@ Next.js Commerce integrates out-of-the-box with BigCommerce. We plan to support 
 
 If you wish to work on a new cms/headless ecommerce provider, please check this repo https://github.com/vercel/commerce-framework and open a PR with your functions and utilities under the standard mentioned in the README.
 
+
 ## Troubleshoot
 
 <details>
@@ -68,6 +69,15 @@ After Email confirmation, Checkout should be manually enabled through BigCommerc
 BigCommerce team has been notified and they plan to add more detailed about this subject.
 </details>
 
+<details>
+<summary>I have issues with BigCommerce data hooks</summary>
+<br>
+Report issue with Data Hooks here: https://github.com/bigcommerce/storefront-data-hooks
+</details>
+
+
+
+
 ## Contribute
 
 Our commitment to Open Source can be found [here](https://vercel.com/oss).
@@ -81,3 +91,15 @@ Our commitment to Open Source can be found [here](https://vercel.com/oss).
 7. Run `yarn dev` to build and watch for code changes
 8. The development branch is `development` (this is the branch pull requests should be made against).
    On a release, the relevant parts of the changes in the `staging` branch are rebased into `master`.
+
+## Goals
+
+* **Next.js Commerce** should have a completely data **agnostic** UI
+* **Aware of schema**: should ship with the right data schemas and types.
+* All providers should return the right datatypes/schemas to blend correctly with Next.js Commerce.
+
+Here are our efforts towards achieving these goals. https://github.com/vercel/commerce-framework
+
+We plan on having some ecommerce providers in the repo, but that’s not the goal. Each provider should have its own standarized data hooks.
+
+`@framework` will be the alias utilized and it will map to the ecommerce provider of preference.
