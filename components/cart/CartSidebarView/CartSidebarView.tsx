@@ -5,7 +5,7 @@ import { Button } from '@components/ui'
 import { Bag, Cross, Check } from '@components/icons'
 import { useUI } from '@components/ui/context'
 import useCart from '@framework/cart/use-cart'
-import usePrice from '@framework/product/use-price'
+import usePrice from '@framework/use-price'
 import CartItem from '../CartItem'
 import s from './CartSidebarView.module.css'
 
@@ -94,7 +94,7 @@ const CartSidebarView: FC = () => {
               My Cart
             </h2>
             <ul className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-accents-3 border-t border-accents-3">
-              {items.map((item) => (
+              {items.map((item: any) => (
                 <CartItem
                   key={item.id}
                   item={item}

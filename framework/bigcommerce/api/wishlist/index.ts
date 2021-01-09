@@ -15,8 +15,8 @@ import removeItem from './handlers/remove-item'
 export type { Wishlist, WishlistItem }
 
 export type ItemBody = {
-  productId: Product['id']
-  variantId: ProductVariant['id']
+  productId: number
+  variantId: number
 }
 
 export type AddItemBody = { item: ItemBody }
