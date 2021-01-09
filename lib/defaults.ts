@@ -1,6 +1,6 @@
 // Fallback to CMS Data
 
-export const defaultPageProps = {
+export const defatultPageProps = {
   header: {
     links: [
       {
