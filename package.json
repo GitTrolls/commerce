@@ -8,7 +8,7 @@
     "analyze": "BUNDLE_ANALYZE=both yarn build",
     "find:unused": "next-unused",
     "generate": "graphql-codegen",
-    "generate:definitions": "node framework/bigcommerce/scripts/generate-definitions.js"
+    "generate:definitions": "node framework/bigcommerce/lib/generate-definitions.js"
   },
   "prettier": {
     "semi": false,
@@ -65,8 +65,7 @@
     "react-dom": "^16.14.0",
     "react-merge-refs": "^1.1.0",
     "react-ticker": "^1.2.2",
-    "swr": "^0.4.0",
-    "tabbable": "^5.1.5",
+    "swr": "^0.3.11",
     "tailwindcss": "^1.9"
   },
   "devDependencies": {
