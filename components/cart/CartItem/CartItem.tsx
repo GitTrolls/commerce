@@ -4,15 +4,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import s from './CartItem.module.css'
 import { Trash, Plus, Minus } from '@components/icons'
-import {useUI} from '@components/ui/context'
+import { useUI } from '@components/ui/context'
 import usePrice from '@framework/product/use-price'
 import useUpdateItem from '@framework/cart/use-update-item'
 import useRemoveItem from '@framework/cart/use-remove-item'
-import { CartItem } from 'framework/types'
 
 const Item = ({
   item,
   currencyCode,
+  ...rest
 }: {
   item: CartItem
   currencyCode: string
@@ -80,6 +80,7 @@ const Item = ({
       className={cn('flex flex-row space-x-8 py-8', {
         'opacity-75 pointer-events-none': removing,
       })}
+      {...rest}
     >
       <div className="w-16 h-16 bg-violet relative overflow-hidden">
         <Image
@@ -93,7 +94,10 @@ const Item = ({
       </div>
       <div className="flex-1 flex flex-col text-base">
         <Link href={`/product/${item.url.split('/')[3]}`}>
-          <span className="font-bold mb-5 text-lg cursor-pointer" onClick={() => closeSidebarIfPresent()}>
+          <span
+            className="font-bold mb-5 text-lg cursor-pointer"
+            onClick={() => closeSidebarIfPresent()}
+          >
             {item.name}
           </span>
         </Link>
