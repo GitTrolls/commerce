@@ -15,13 +15,14 @@ const CartSidebarView: FC = () => {
 
   const { price: subTotal } = usePrice(
     data && {
-      amount: data.base_amount,
+      amount: data.subTotal,
       currencyCode: data.currency?.code || 'USD',
     }
   )
+  
   const { price: total } = usePrice(
     data && {
-      amount: data.cart_amount,
+      amount: data.total,
       currencyCode: data.currency?.code || 'USD',
     }
   )
@@ -93,7 +94,7 @@ const CartSidebarView: FC = () => {
               My Cart
             </h2>
             <ul className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-accents-3 border-t border-accents-3">
-              {data?.products?.map((item) => (
+              {data.products.map((item: any) => (
                 <CartItem
                   key={item.id}
                   item={item}

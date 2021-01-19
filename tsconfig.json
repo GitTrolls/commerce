@@ -33,5 +33,5 @@
     "**/*.tsx",
     "**/*.js"
   ],
-  "exclude": ["node_modules", "components/wishlist"]
+  "exclude": ["node_modules"]
 }
