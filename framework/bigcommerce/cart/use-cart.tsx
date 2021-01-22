@@ -1,16 +1,18 @@
+import { normalizeCart } from '../lib/normalize'
 import type { HookFetcher } from '@commerce/utils/types'
 import type { SwrOptions } from '@commerce/utils/use-data'
+import useResponse from '@commerce/utils/use-response'
 import useCommerceCart, { CartInput } from '@commerce/cart/use-cart'
-import type { Cart } from '../api/cart'
+import type { Cart as BigCommerceCart } from '../api/cart'
 
 const defaultOpts = {
   url: '/api/bigcommerce/cart',
   method: 'GET',
 }
 
-export type { Cart }
+type UseCartResponse = BigCommerceCart & Cart
 
-export const fetcher: HookFetcher<Cart | null, CartInput> = (
+export const fetcher: HookFetcher<UseCartResponse | null, CartInput> = (
   options,
   { cartId },
   fetch
@@ -20,26 +22,28 @@ export const fetcher: HookFetcher<Cart | null, CartInput> = (
 
 export function extendHook(
   customFetcher: typeof fetcher,
-  swrOptions?: SwrOptions<Cart | null, CartInput>
+  swrOptions?: SwrOptions<UseCartResponse | null, CartInput>
 ) {
   const useCart = () => {
     const response = useCommerceCart(defaultOpts, [], customFetcher, {
       revalidateOnFocus: false,
       ...swrOptions,
     })
-
-    // Uses a getter to only calculate the prop when required
-    // response.data is also a getter and it's better to not trigger it early
-    Object.defineProperty(response, 'isEmpty', {
-      get() {
-        return Object.values(response.data?.line_items ?? {}).every(
-          (items) => !items.length
-        )
+    const res = useResponse(response, {
+      normalizer: normalizeCart,
+      descriptors: {
+        isEmpty: {
+          get() {
+            return Object.values(response.data?.line_items ?? {}).every(
+              (items) => !items.length
+            )
+          },
+          enumerable: true,
+        },
       },
-      set: (x) => x,
     })
 
-    return response
+    return res
   }
 
   useCart.extend = extendHook

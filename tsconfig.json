@@ -26,6 +26,12 @@
       "@framework": ["framework/bigcommerce"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js"],
-  "exclude": ["node_modules"]
+  "include": [
+    "framework/types.d.ts",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js"
+  ],
+  "exclude": ["node_modules", "components/wishlist"]
 }

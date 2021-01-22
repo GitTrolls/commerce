@@ -5,28 +5,28 @@ import { Button } from '@components/ui'
 import { Bag, Cross, Check } from '@components/icons'
 import { useUI } from '@components/ui/context'
 import useCart from '@framework/cart/use-cart'
-import usePrice from '@framework/use-price'
+import usePrice from '@framework/product/use-price'
 import CartItem from '../CartItem'
 import s from './CartSidebarView.module.css'
 
 const CartSidebarView: FC = () => {
   const { closeSidebar } = useUI()
-  const { data, isEmpty } = useCart()
+  const { data, isLoading, isEmpty } = useCart()
+
   const { price: subTotal } = usePrice(
     data && {
-      amount: data.base_amount,
-      currencyCode: data.currency.code,
+      amount: Number(data.subTotal),
+      currencyCode: data.currency?.code || 'USD',
     }
   )
+
   const { price: total } = usePrice(
     data && {
-      amount: data.cart_amount,
-      currencyCode: data.currency.code,
+      amount: Number(data.total),
+      currencyCode: data.currency?.code || 'USD',
     }
   )
   const handleClose = () => closeSidebar()
-
-  const items = data?.line_items.physical_items ?? []
 
   const error = null
   const success = null
@@ -34,9 +34,7 @@ const CartSidebarView: FC = () => {
   return (
     <div
       className={cn(s.root, {
-        [s.empty]: error,
-        [s.empty]: success,
-        [s.empty]: isEmpty,
+        [s.empty]: error || success || isLoading || isEmpty,
       })}
     >
       <header className="px-4 pt-6 pb-4 sm:px-6">
@@ -56,7 +54,7 @@ const CartSidebarView: FC = () => {
         </div>
       </header>
 
-      {isEmpty ? (
+      {isLoading || isEmpty ? (
         <div className="flex-1 px-4 flex flex-col justify-center items-center">
           <span className="border border-dashed border-primary rounded-full flex items-center justify-center w-16 h-16 p-12 bg-secondary text-secondary">
             <Bag className="absolute" />
@@ -94,7 +92,7 @@ const CartSidebarView: FC = () => {
               My Cart
             </h2>
             <ul className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-accents-3 border-t border-accents-3">
-              {items.map((item: any) => (
+              {data?.items?.map((item) => (
                 <CartItem
                   key={item.id}
                   item={item}
