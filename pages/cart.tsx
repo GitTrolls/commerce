@@ -1,14 +1,13 @@
 import type { GetStaticPropsContext } from 'next'
 import { getConfig } from '@framework/api'
-import getAllPages from '@framework/common/get-all-pages'
+import getAllPages from '@framework/api/operations/get-all-pages'
 import useCart from '@framework/cart/use-cart'
-import usePrice from '@framework/product/use-price'
+import usePrice from '@framework/use-price'
 import { Layout } from '@components/common'
 import { Button } from '@components/ui'
 import { Bag, Cross, Check } from '@components/icons'
 import { CartItem } from '@components/cart'
 import { Text } from '@components/ui'
-import products from '@framework/api/catalog/products'
 
 export async function getStaticProps({
   preview,
@@ -22,27 +21,29 @@ export async function getStaticProps({
 }
 
 export default function Cart() {
-  const error = null
-  const success = null
-  const { data, isLoading, isEmpty } = useCart()
-
+  const { data, isEmpty } = useCart()
   const { price: subTotal } = usePrice(
     data && {
-      amount: Number(data.subTotal),
-      currencyCode: data.currency.code || 'USD',
+      amount: data.base_amount,
+      currencyCode: data.currency.code,
     }
   )
   const { price: total } = usePrice(
     data && {
-      amount: Number(data.total),
-      currencyCode: data.currency?.code || 'USD',
+      amount: data.cart_amount,
+      currencyCode: data.currency.code,
     }
   )
+
+  const items = data?.line_items.physical_items ?? []
+
+  const error = null
+  const success = null
 
   return (
     <div className="grid lg:grid-cols-12">
       <div className="lg:col-span-8">
-        {isLoading || isEmpty ? (
+        {isEmpty ? (
           <div className="flex-1 px-12 py-24 flex flex-col justify-center items-center ">
             <span className="border border-dashed border-secondary flex items-center justify-center w-16 h-16 bg-primary p-12 rounded-lg text-primary">
               <Bag className="absolute" />
@@ -78,7 +79,7 @@ export default function Cart() {
             <Text variant="pageHeading">My Cart</Text>
             <Text variant="sectionHeading">Review your Order</Text>
             <ul className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-accents-2 border-b border-accents-2">
-              {data?.items.map((item) => (
+              {items.map((item) => (
                 <CartItem
                   key={item.id}
                   item={item}

@@ -1,9 +1,8 @@
 import { HookFetcher } from '@commerce/utils/types'
 import { SwrOptions } from '@commerce/utils/use-data'
-import useResponse from '@commerce/utils/use-response'
 import useCommerceWishlist from '@commerce/wishlist/use-wishlist'
 import type { Wishlist } from '../api/wishlist'
-import useCustomer from '../customer/use-customer'
+import useCustomer from '../use-customer'
 
 const defaultOpts = {
   url: '/api/bigcommerce/wishlist',
@@ -47,7 +46,7 @@ export function extendHook(
     const response = useCommerceWishlist(
       defaultOpts,
       [
-        ['customerId', customer?.id],
+        ['customerId', customer?.entityId],
         ['includeProducts', includeProducts],
       ],
       customFetcher,
@@ -56,18 +55,17 @@ export function extendHook(
         ...swrOptions,
       }
     )
-    const res = useResponse(response, {
-      descriptors: {
-        isEmpty: {
-          get() {
-            return (response.data?.items?.length || 0) <= 0
-          },
-          set: (x) => x,
-        },
+
+    // Uses a getter to only calculate the prop when required
+    // response.data is also a getter and it's better to not trigger it early
+    Object.defineProperty(response, 'isEmpty', {
+      get() {
+        return (response.data?.items?.length || 0) <= 0
       },
+      set: (x) => x,
     })
 
-    return res
+    return response
   }
 
   useWishlist.extend = extendHook

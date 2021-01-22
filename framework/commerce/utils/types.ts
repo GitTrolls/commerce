@@ -22,5 +22,3 @@ export type HookFetcherOptions = {
 }
 
 export type HookInput = [string, string | number | boolean | undefined][]
-
-export type Override<T, K> = Omit<T, keyof K> & K
