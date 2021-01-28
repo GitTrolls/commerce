@@ -9,11 +9,11 @@ export type FetcherOptions = {
   body?: any
 }
 
-export type HookFetcher<Result, Input = null> = (
+export type HookFetcher<Data, Input = null, Result = any> = (
   options: HookFetcherOptions | null,
   input: Input,
   fetch: <T = Result>(options: FetcherOptions) => Promise<T>
-) => Result | Promise<Result>
+) => Data | Promise<Data>
 
 export type HookFetcherOptions = {
   query?: string
@@ -22,3 +22,5 @@ export type HookFetcherOptions = {
 }
 
 export type HookInput = [string, string | number | boolean | undefined][]
+
+export type Override<T, K> = Omit<T, keyof K> & K
