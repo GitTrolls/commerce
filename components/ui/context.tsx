@@ -90,7 +90,6 @@ function uiReducer(state: State, action: Action) {
       return {
         ...state,
         displayModal: true,
-        displaySidebar: false,
       }
     }
     case 'CLOSE_MODAL': {
