@@ -3,14 +3,9 @@ import debounce from 'lodash.debounce'
 import type { HookFetcher } from '@commerce/utils/types'
 import { CommerceError } from '@commerce/utils/errors'
 import useCartUpdateItem from '@commerce/cart/use-update-item'
-import { normalizeCart } from '../lib/normalize'
-import type {
-  ItemBody,
-  UpdateItemBody,
-  Cart as BigcommerceCart,
-} from '../api/cart'
+import type { ItemBody, UpdateItemBody } from '../api/cart'
 import { fetcher as removeFetcher } from './use-remove-item'
-import useCart from './use-cart'
+import useCart, { Cart } from './use-cart'
 
 const defaultOpts = {
   url: '/api/bigcommerce/cart',
@@ -19,7 +14,7 @@ const defaultOpts = {
 
 export type UpdateItemInput = Partial<{ id: string } & ItemBody>
 
-export const fetcher: HookFetcher<Cart | null, UpdateItemBody> = async (
+export const fetcher: HookFetcher<Cart | null, UpdateItemBody> = (
   options,
   { itemId, item },
   fetch
@@ -35,13 +30,11 @@ export const fetcher: HookFetcher<Cart | null, UpdateItemBody> = async (
     })
   }
 
-  const data = await fetch<BigcommerceCart>({
+  return fetch({
     ...defaultOpts,
     ...options,
     body: { itemId, item },
   })
-
-  return normalizeCart(data)
 }
 
 function extendHook(customFetcher: typeof fetcher, cfg?: { wait?: number }) {

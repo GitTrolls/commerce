@@ -16,14 +16,14 @@
     "jsx": "preserve",
     "paths": {
       "@lib/*": ["lib/*"],
-      "@utils/*": ["utils/*"],
-      "@config/*": ["config/*"],
       "@assets/*": ["assets/*"],
+      "@config/*": ["config/*"],
       "@components/*": ["components/*"],
-      "@commerce": ["framework/commerce"],
+      "@utils/*": ["utils/*"],
       "@commerce/*": ["framework/commerce/*"],
-      "@framework": ["framework/bigcommerce"]
+      "@commerce": ["framework/commerce"],
       "@framework/*": ["framework/bigcommerce/*"],
+      "@framework": ["framework/bigcommerce"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js"],
