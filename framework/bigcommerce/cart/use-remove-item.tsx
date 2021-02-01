@@ -1,9 +1,8 @@
 import { useCallback } from 'react'
 import { HookFetcher } from '@commerce/utils/types'
 import useCartRemoveItem from '@commerce/cart/use-remove-item'
-import { normalizeCart } from '../lib/normalize'
-import type { RemoveItemBody, Cart as BigcommerceCart } from '../api/cart'
-import useCart from './use-cart'
+import type { RemoveItemBody } from '../api/cart'
+import useCart, { Cart } from './use-cart'
 
 const defaultOpts = {
   url: '/api/bigcommerce/cart',
@@ -14,17 +13,16 @@ export type RemoveItemInput = {
   id: string
 }
 
-export const fetcher: HookFetcher<Cart | null, RemoveItemBody> = async (
+export const fetcher: HookFetcher<Cart | null, RemoveItemBody> = (
   options,
   { itemId },
   fetch
 ) => {
-  const data = await fetch<BigcommerceCart>({
+  return fetch({
     ...defaultOpts,
     ...options,
     body: { itemId },
   })
-  return normalizeCart(data)
 }
 
 export function extendHook(customFetcher: typeof fetcher) {

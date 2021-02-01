@@ -8,10 +8,10 @@ import { getCategoryPath, getDesignerPath } from '@lib/search'
 interface Props {
   categories?: any
   brands?: any
-  products?: Product[]
+  newestProducts?: any
 }
 
-const Head: FC<Props> = ({ categories, brands, products = [] }) => {
+const Head: FC<Props> = ({ categories, brands, newestProducts }) => {
   return (
     <div className={s.root}>
       <div className={s.asideWrapper}>
@@ -48,15 +48,13 @@ const Head: FC<Props> = ({ categories, brands, products = [] }) => {
       </div>
       <div className="flex-1">
         <Grid layout="normal">
-          {products.map((product) => (
+          {newestProducts.map(({ node }: any) => (
             <ProductCard
-              key={product.path}
-              product={product}
+              key={node.path}
+              product={node}
               variant="simple"
-              imgProps={{
-                width: 480,
-                height: 480,
-              }}
+              imgWidth={480}
+              imgHeight={480}
             />
           ))}
         </Grid>

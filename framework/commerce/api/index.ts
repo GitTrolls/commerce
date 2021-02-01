@@ -32,3 +32,5 @@ export interface CommerceAPIFetchOptions<Variables> {
   variables?: Variables
   preview?: boolean
 }
+
+// TODO: define interfaces for all the available operations and API endpoints

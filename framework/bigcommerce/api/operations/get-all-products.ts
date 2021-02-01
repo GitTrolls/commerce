@@ -1,13 +1,12 @@
 import type {
   GetAllProductsQuery,
   GetAllProductsQueryVariables,
-} from '../schema'
-import type { RecursivePartial, RecursiveRequired } from '../api/utils/types'
-import filterEdges from '../api/utils/filter-edges'
-import setProductLocaleMeta from '../api/utils/set-product-locale-meta'
-import { productConnectionFragment } from '../api/fragments/product'
-import { BigcommerceConfig, getConfig } from '../api'
-import { normalizeProduct } from '../lib/normalize'
+} from '../../schema'
+import type { RecursivePartial, RecursiveRequired } from '../utils/types'
+import filterEdges from '../utils/filter-edges'
+import setProductLocaleMeta from '../utils/set-product-locale-meta'
+import { productConnectionFragment } from '../fragments/product'
+import { BigcommerceConfig, getConfig } from '..'
 
 export const getAllProductsQuery = /* GraphQL */ `
   query getAllProducts(
@@ -73,7 +72,7 @@ async function getAllProducts(opts?: {
   variables?: ProductVariables
   config?: BigcommerceConfig
   preview?: boolean
-}): Promise<{ products: Product[] }>
+}): Promise<GetAllProductsResult>
 
 async function getAllProducts<
   T extends Record<keyof GetAllProductsResult, any[]>,
@@ -94,7 +93,7 @@ async function getAllProducts({
   variables?: ProductVariables
   config?: BigcommerceConfig
   preview?: boolean
-} = {}): Promise<{ products: Product[] | any[] }> {
+} = {}): Promise<GetAllProductsResult> {
   config = getConfig(config)
 
   const locale = vars.locale || config.locale
@@ -127,7 +126,7 @@ async function getAllProducts({
     })
   }
 
-  return { products: products.map(({ node }) => normalizeProduct(node as any)) }
+  return { products }
 }
 
 export default getAllProducts

@@ -1,27 +1,31 @@
+import type { responseInterface } from 'swr'
 import Cookies from 'js-cookie'
 import type { HookInput, HookFetcher, HookFetcherOptions } from '../utils/types'
-import useData, { ResponseState, SwrOptions } from '../utils/use-data'
-import type { Cart } from '../types'
+import useData, { SwrOptions } from '../utils/use-data'
 import { useCommerce } from '..'
 
-export type CartResponse<Data> = ResponseState<Data> & { isEmpty?: boolean }
-
-export type CartInput = {
-  cartId?: Cart['id']
+export type CartResponse<Result> = responseInterface<Result, Error> & {
+  isEmpty: boolean
 }
 
-export default function useCart<Data extends Cart | null>(
+export type CartInput = {
+  cartId: string | undefined
+}
+
+export default function useCart<Result>(
   options: HookFetcherOptions,
   input: HookInput,
-  fetcherFn: HookFetcher<Data, CartInput>,
-  swrOptions?: SwrOptions<Data, CartInput>
-): CartResponse<Data> {
+  fetcherFn: HookFetcher<Result, CartInput>,
+  swrOptions?: SwrOptions<Result, CartInput>
+) {
   const { cartCookie } = useCommerce()
+
   const fetcher: typeof fetcherFn = (options, input, fetch) => {
     input.cartId = Cookies.get(cartCookie)
     return fetcherFn(options, input, fetch)
   }
+
   const response = useData(options, input, fetcher, swrOptions)
 
-  return response
+  return Object.assign(response, { isEmpty: true }) as CartResponse<Result>
 }

@@ -1,5 +1,5 @@
-import { GetCustomerIdQuery } from '../schema'
-import { BigcommerceConfig, getConfig } from '../api'
+import { GetCustomerIdQuery } from '../../schema'
+import { BigcommerceConfig, getConfig } from '..'
 
 export const getCustomerIdQuery = /* GraphQL */ `
   query getCustomerId {

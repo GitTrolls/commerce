@@ -7,11 +7,12 @@ import { useUI } from '@components/ui/context'
 import { Navbar, Footer } from '@components/common'
 import { useAcceptCookies } from '@lib/hooks/useAcceptCookies'
 import { Sidebar, Button, Modal, LoadingDots } from '@components/ui'
-import CartSidebarView from '@components/cart/CartSidebarView'
+import { CartSidebarView } from '@components/cart'
 
 import LoginView from '@components/auth/LoginView'
 import { CommerceProvider } from '@framework'
-import type { Page } from '@framework/common/get-all-pages'
+import type { Page } from '@framework/api/operations/get-all-pages'
+
 
 const Loading = () => (
   <div className="w-80 h-80 flex items-center text-center justify-center p-3">
@@ -27,12 +28,10 @@ const SignUpView = dynamic(
   () => import('@components/auth/SignUpView'),
   dynamicProps
 )
-
 const ForgotPassword = dynamic(
   () => import('@components/auth/ForgotPassword'),
   dynamicProps
 )
-
 const FeatureBar = dynamic(
   () => import('@components/common/FeatureBar'),
   dynamicProps
@@ -62,15 +61,15 @@ const Layout: FC<Props> = ({ children, pageProps }) => {
         <main className="fit">{children}</main>
         <Footer pages={pageProps.pages} />
 
-        <Sidebar open={displaySidebar} onClose={closeSidebar}>
-          <CartSidebarView />
-        </Sidebar>
-
         <Modal open={displayModal} onClose={closeModal}>
           {modalView === 'LOGIN_VIEW' && <LoginView />}
           {modalView === 'SIGNUP_VIEW' && <SignUpView />}
           {modalView === 'FORGOT_VIEW' && <ForgotPassword />}
         </Modal>
+
+        <Sidebar open={displaySidebar} onClose={closeSidebar}>
+          <CartSidebarView />
+        </Sidebar>
 
         <FeatureBar
           title="This site uses cookies to improve your experience. By clicking, you agree to our Privacy Policy."
