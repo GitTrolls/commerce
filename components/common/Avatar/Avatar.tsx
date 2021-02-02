@@ -1,3 +1,4 @@
+import cn from 'classnames'
 import { FC, useState, useMemo, useRef, useEffect } from 'react'
 import { getRandomPairOfColors } from '@lib/colors'
 

@@ -4,24 +4,24 @@ import createApiHandler, {
   BigcommerceHandler,
 } from '../utils/create-api-handler'
 import { BigcommerceApiError } from '../utils/errors'
-import type { ProductEdge } from '../operations/get-all-products'
 import getProducts from './handlers/get-products'
+import { Product } from 'framework/types'
 
 export type SearchProductsData = {
-  products: ProductEdge[]
+  products: Product[]
   found: boolean
 }
 
 export type ProductsHandlers = {
   getProducts: BigcommerceHandler<
     SearchProductsData,
-    { search?: 'string'; category?: string; brand?: string; sort?: string }
+    { search?: string; category?: string; brand?: string; sort?: string }
   >
 }
 
 const METHODS = ['GET']
 
-// TODO: a complete implementation should have schema validation for `req.body`
+// TODO(lf): a complete implementation should have schema validation for `req.body`
 const productsApi: BigcommerceApiHandler<
   SearchProductsData,
   ProductsHandlers
