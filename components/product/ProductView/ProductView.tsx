@@ -4,8 +4,9 @@ import { NextSeo } from 'next-seo'
 import { FC, useState } from 'react'
 import s from './ProductView.module.css'
 
+import { useUI } from '@components/ui'
 import { Swatch, ProductSlider } from '@components/product'
-import { Button, Container, Text, useUI} from '@components/ui'
+import { Button, Container, Text } from '@components/ui'
 
 import usePrice from '@framework/product/use-price'
 import { useAddItem } from '@framework/cart'
@@ -97,8 +98,8 @@ const ProductView: FC<Props> = ({ product }) => {
               ))}
             </ProductSlider>
           </div>
-
         </div>
+
         <div className={s.sidebar}>
           <section>
             {product.options?.map((opt) => (
