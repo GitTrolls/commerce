@@ -1,6 +1,10 @@
-module.exports = {
+const bundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: !!process.env.BUNDLE_ANALYZE,
+})
+
+module.exports = bundleAnalyzer({
   images: {
-    domains: ['cdn11.bigcommerce.com', 'cdn.shopify.com'],
+    domains: ['cdn11.bigcommerce.com'],
   },
   i18n: {
     locales: ['en-US', 'es'],
@@ -34,7 +38,4 @@ module.exports = {
       },
     ]
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-}
+})

@@ -8,10 +8,10 @@ import { getCategoryPath, getDesignerPath } from '@lib/search'
 interface Props {
   categories?: any
   brands?: any
-  products?: Product[]
+  newestProducts?: any
 }
 
-const Head: FC<Props> = ({ categories, brands, products = [] }) => {
+const Head: FC<Props> = ({ categories, brands, newestProducts }) => {
   return (
     <div className={s.root}>
       <div className={s.asideWrapper}>
@@ -19,7 +19,7 @@ const Head: FC<Props> = ({ categories, brands, products = [] }) => {
           <ul className="mb-10">
             <li className="py-1 text-base font-bold tracking-wide">
               <Link href={getCategoryPath('')}>
-                <a>All Collections</a>
+                <a>All Categories</a>
               </Link>
             </li>
             {categories.map((cat: any) => (
@@ -30,19 +30,31 @@ const Head: FC<Props> = ({ categories, brands, products = [] }) => {
               </li>
             ))}
           </ul>
+          <ul className="">
+            <li className="py-1 text-base font-bold tracking-wide">
+              <Link href={getDesignerPath('')}>
+                <a>All Designers</a>
+              </Link>
+            </li>
+            {brands.flatMap(({ node }: any) => (
+              <li key={node.path} className="py-1 text-accents-8 text-base">
+                <Link href={getDesignerPath(node.path)}>
+                  <a>{node.name}</a>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
       <div className="flex-1">
         <Grid layout="normal">
-          {products.map((product) => (
+          {newestProducts.map(({ node }: any) => (
             <ProductCard
-              key={product.path}
-              product={product}
+              key={node.path}
+              product={node}
               variant="simple"
-              imgProps={{
-                width: 480,
-                height: 480,
-              }}
+              imgWidth={480}
+              imgHeight={480}
             />
           ))}
         </Grid>

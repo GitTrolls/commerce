@@ -1,68 +1,46 @@
 import { useCallback } from 'react'
 import { HookFetcher } from '@commerce/utils/types'
-import { ValidationError } from '@commerce/utils/errors'
-import useCartRemoveItem, {
-  RemoveItemInput as UseRemoveItemInput,
-} from '@commerce/cart/use-remove-item'
-import { normalizeCart } from '../lib/normalize'
-import type {
-  RemoveCartItemBody,
-  Cart,
-  BigcommerceCart,
-  LineItem,
-} from '../types'
-import useCart from './use-cart'
+import useCartRemoveItem from '@commerce/cart/use-remove-item'
+import type { RemoveItemBody } from '../api/cart'
+import useCart, { Cart } from './use-cart'
 
 const defaultOpts = {
   url: '/api/bigcommerce/cart',
   method: 'DELETE',
 }
 
-export type RemoveItemFn<T = any> = T extends LineItem
-  ? (input?: RemoveItemInput<T>) => Promise<Cart | null>
-  : (input: RemoveItemInput<T>) => Promise<Cart | null>
+export type RemoveItemInput = {
+  id: string
+}
 
-export type RemoveItemInput<T = any> = T extends LineItem
-  ? Partial<UseRemoveItemInput>
-  : UseRemoveItemInput
-
-export const fetcher: HookFetcher<Cart | null, RemoveCartItemBody> = async (
+export const fetcher: HookFetcher<Cart | null, RemoveItemBody> = (
   options,
   { itemId },
   fetch
 ) => {
-  const data = await fetch<BigcommerceCart>({
+  return fetch({
     ...defaultOpts,
     ...options,
     body: { itemId },
   })
-  return normalizeCart(data)
 }
 
 export function extendHook(customFetcher: typeof fetcher) {
-  const useRemoveItem = <T extends LineItem | undefined = undefined>(
-    item?: T
-  ) => {
+  const useRemoveItem = (item?: any) => {
     const { mutate } = useCart()
-    const fn = useCartRemoveItem<Cart | null, RemoveCartItemBody>(
+    const fn = useCartRemoveItem<Cart | null, RemoveItemBody>(
       defaultOpts,
       customFetcher
     )
-    const removeItem: RemoveItemFn<LineItem> = async (input) => {
-      const itemId = input?.id ?? item?.id
 
-      if (!itemId) {
-        throw new ValidationError({
-          message: 'Invalid input used for this operation',
-        })
-      }
-
-      const data = await fn({ itemId })
-      await mutate(data, false)
-      return data
-    }
-
-    return useCallback(removeItem as RemoveItemFn<T>, [fn, mutate])
+    return useCallback(
+      async function removeItem(input: RemoveItemInput) {
+        const data = await fn({ itemId: input.id ?? item?.id })
+        await mutate(data, false)
+        return data
+      },
+      [fn, mutate]
+    )
   }
 
   useRemoveItem.extend = extendHook
