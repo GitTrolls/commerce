@@ -14,8 +14,6 @@ export type CartResponse<P extends Provider> = ReturnType<
   NonNullable<NonNullable<NonNullable<P['cart']>['useCart']>['onResponse']>
 >
 
-export type UseCart<P extends Provider> = () => CartResponse<P>
-
 export const fetcher: HookFetcherFn<Cart | null, CartInput> = async ({
   options,
   input: { cartId },
@@ -26,17 +24,18 @@ export const fetcher: HookFetcherFn<Cart | null, CartInput> = async ({
   return data && normalize ? normalize(data) : data
 }
 
-export default function useCart<P extends Provider>() {
+export default function useFake<P extends Provider>() {
   const { providerRef, cartCookie } = useCommerce<P>()
 
   const provider = providerRef.current
   const opts = provider.cart?.useCart
+  const options = opts?.fetchOptions ?? {}
   const fetcherFn = opts?.fetcher ?? fetcher
   const wrapper: typeof fetcher = (context) => {
     context.input.cartId = Cookies.get(cartCookie)
     return fetcherFn(context)
   }
-  const response = useData(opts!, [], wrapper, opts?.swrOptions)
+  const response = useData(options, [], wrapper, opts?.swrOptions)
   const memoizedResponse = useMemo(
     () => (opts?.onResponse ? opts.onResponse(response) : response),
     [response]
