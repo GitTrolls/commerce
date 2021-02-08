@@ -1,16 +1,11 @@
 import { ReactNode } from 'react'
 import * as React from 'react'
-import { Fetcher } from '@commerce/utils/types'
 import {
   CommerceConfig,
   CommerceProvider as CoreCommerceProvider,
   useCommerce as useCoreCommerce,
-  HookHandler,
 } from '@commerce'
 import { FetcherError } from '@commerce/utils/errors'
-import type { CartInput } from '@commerce/cart/use-cart'
-import { normalizeCart } from './lib/normalize'
-import { Cart } from './types'
 
 async function getText(res: Response) {
   try {
@@ -27,57 +22,6 @@ async function getError(res: Response) {
   }
   return new FetcherError({ message: await getText(res), status: res.status })
 }
-
-const fetcher: Fetcher<any> = async ({
-  url,
-  method = 'GET',
-  variables,
-  body: bodyObj,
-}) => {
-  const hasBody = Boolean(variables || bodyObj)
-  const body = hasBody
-    ? JSON.stringify(variables ? { variables } : bodyObj)
-    : undefined
-  const headers = hasBody ? { 'Content-Type': 'application/json' } : undefined
-  const res = await fetch(url!, { method, body, headers })
-
-  if (res.ok) {
-    const { data } = await res.json()
-    return data
-  }
-
-  throw await getError(res)
-}
-
-const useCart: HookHandler<Cart, CartInput> = {
-  fetchOptions: {
-    url: '/api/bigcommerce/cart',
-    method: 'GET',
-  },
-  fetcher(context) {
-    return undefined as any
-  },
-  onResponse(response) {
-    return Object.create(response, {
-      isEmpty: {
-        get() {
-          return (response.data?.lineItems.length ?? 0) <= 0
-        },
-        enumerable: true,
-      },
-    })
-  },
-}
-
-export const bigcommerceProvider = {
-  locale: 'en-us',
-  cartCookie: 'bc_cartId',
-  fetcher,
-  cartNormalizer: normalizeCart,
-  cart: { useCart },
-}
-
-export type BigcommerceProvider = typeof bigcommerceProvider
 
 export const bigcommerceConfig: CommerceConfig = {
   locale: 'en-us',
@@ -108,13 +52,10 @@ export type BigcommerceProps = {
 
 export function CommerceProvider({ children, ...config }: BigcommerceProps) {
   return (
-    <CoreCommerceProvider
-      provider={bigcommerceProvider}
-      config={{ ...bigcommerceConfig, ...config }}
-    >
+    <CoreCommerceProvider config={{ ...bigcommerceConfig, ...config }}>
       {children}
     </CoreCommerceProvider>
   )
 }
 
-export const useCommerce = () => useCoreCommerce<BigcommerceProvider>()
+export const useCommerce = () => useCoreCommerce()
