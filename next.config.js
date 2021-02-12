@@ -1,6 +1,6 @@
 module.exports = {
   images: {
-    domains: ['cdn11.bigcommerce.com', 'cdn.shopify.com'],
+    domains: ['cdn11.bigcommerce.com'],
   },
   i18n: {
     locales: ['en-US', 'es'],
