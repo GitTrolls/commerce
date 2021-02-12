@@ -1,5 +1,4 @@
 import type { Wishlist as BCWishlist } from '@framework/api/wishlist'
-import type { Customer as BCCustomer } from '@framework/api/customers'
 
 export interface Discount {
   // The value of the discount, can be an amount or percentage
@@ -92,9 +91,6 @@ export interface Cart {
 
 // TODO: Properly define this type
 export interface Wishlist extends BCWishlist {}
-
-// TODO: Properly define this type
-export interface Customer extends BCCustomer {}
 
 /**
  * Cart mutations

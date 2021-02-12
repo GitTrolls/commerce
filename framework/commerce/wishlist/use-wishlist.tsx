@@ -5,7 +5,6 @@ import type {
   UseHookInput,
   UseHookResponse,
 } from '../utils/types'
-import defaultFetcher from '../utils/default-fetcher'
 import useData from '../utils/use-data-2'
 import { Provider, useCommerce } from '..'
 
@@ -23,12 +22,19 @@ export type WishlistResponse<P extends Provider> = UseHookResponse<
 >
 
 export type UseWishlist<P extends Provider> = Partial<
-  UseWishlistInput<P>
-> extends UseWishlistInput<P>
-  ? (input?: UseWishlistInput<P>) => WishlistResponse<P>
-  : (input: UseWishlistInput<P>) => WishlistResponse<P>
+  WishlistResponse<P>
+> extends WishlistResponse<P>
+  ? (input?: WishlistResponse<P>) => WishlistResponse<P>
+  : (input: WishlistResponse<P>) => WishlistResponse<P>
 
-export const fetcher = defaultFetcher as HookFetcherFn<Wishlist | null>
+export const fetcher: HookFetcherFn<Wishlist | null> = async ({
+  options,
+  fetch,
+  normalize,
+}) => {
+  const data = await fetch({ ...options })
+  return data && normalize ? normalize(data) : data
+}
 
 export default function useWishlist<P extends Provider>(
   input: UseWishlistInput<P> = {}
