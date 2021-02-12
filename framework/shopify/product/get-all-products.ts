@@ -1,8 +1,7 @@
-import { GraphQLFetcherResult } from '@commerce/api'
-import { getConfig, ShopifyConfig } from '../api'
-import { Product, ProductEdge } from '../schema'
-import { getAllProductsQuery } from '../utils/queries'
-import { normalizeProduct } from '@framework/lib/normalize'
+import Client from 'shopify-buy'
+import { ShopifyConfig } from '../api'
+import { Product } from '../types'
+import toCommerceProducts from '../utils/to-commerce-products'
 
 export type ProductNode = Product
 
@@ -11,26 +10,27 @@ type Variables = {
   field?: string
 }
 
+type Options = {
+  variables: Variables
+  config: ShopifyConfig
+  preview?: boolean
+}
+
 type ReturnType = {
   products: any[]
 }
 
-const getAllProducts = async (options: {
-  variables?: Variables
-  config?: ShopifyConfig
-  preview?: boolean
-}): Promise<ReturnType> => {
-  let { config, variables = { first: 250 } } = options ?? {}
-  config = getConfig(config)
+const getAllProducts = async (options: Options): Promise<ReturnType> => {
+  const { config } = options
 
-  const { data }: GraphQLFetcherResult = await config.fetch(
-    getAllProductsQuery,
-    { variables }
-  )
+  const client = Client.buildClient({
+    storefrontAccessToken: config.apiToken,
+    domain: config.commerceUrl,
+  })
 
-  const products = data?.products?.edges?.map(({ node: p }: ProductEdge) =>
-    normalizeProduct(p)
-  )
+  const res = (await client.product.fetchAll()) as Product[]
+
+  const products = toCommerceProducts(res)
 
   return {
     products,

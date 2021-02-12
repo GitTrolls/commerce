@@ -1,63 +1,30 @@
 import { useCallback } from 'react'
-import useCart from './use-cart'
-import useCartAddItem, {
-  AddItemInput as UseAddItemInput,
-} from '@commerce/cart/use-add-item'
-import type { HookFetcher } from '@commerce/utils/types'
-import type { Cart } from '@commerce/types'
-import checkoutLineItemAddMutation from '../utils/mutations/checkout-line-item-add'
-import getCheckoutId from '@framework/utils/get-checkout-id'
-import { checkoutToCart } from './utils'
-import { AddCartItemBody, CartItemBody } from '@framework/types'
-import { MutationCheckoutLineItemsAddArgs } from '@framework/schema'
+import { LineItemToAdd } from 'shopify-buy'
+import { useCommerce } from '../index'
 
-const defaultOpts = {
-  query: checkoutLineItemAddMutation,
+type Options = {
+  productId: number
+  variantId: string | number
 }
 
-export type AddItemInput = UseAddItemInput<CartItemBody>
+const useAddItem = () => {
+  const { checkout, client, updateCheckout } = useCommerce()
 
-export const fetcher: HookFetcher<
-  Cart,
-  MutationCheckoutLineItemsAddArgs
-> = async (options, { checkoutId, lineItems }, fetch) => {
-  const data = await fetch<any, AddCartItemBody>({
-    ...options,
-    variables: {
-      checkoutId,
-      lineItems,
+  return useCallback(
+    async function addItem(options: Options) {
+      const lineItems: LineItemToAdd[] = [
+        {
+          variantId: `${options.variantId}`,
+          quantity: 1,
+        },
+      ]
+
+      const cart = await client?.checkout.addLineItems(checkout.id, lineItems)
+      updateCheckout(cart)
+      return cart
     },
-  })
-
-  return checkoutToCart(data?.checkoutLineItemsAdd)
+    [checkout, client]
+  )
 }
 
-export function extendHook(customFetcher: typeof fetcher) {
-  const useAddItem = () => {
-    const { mutate, data: cart } = useCart()
-    const fn = useCartAddItem(defaultOpts, customFetcher)
-
-    return useCallback(
-      async function addItem(input: AddItemInput) {
-        const data = await fn({
-          lineItems: [
-            {
-              variantId: input.variantId,
-              quantity: input.quantity ?? 1,
-            },
-          ],
-          checkoutId: getCheckoutId(cart?.id)!,
-        })
-        await mutate(data, false)
-        return data
-      },
-      [fn, mutate]
-    )
-  }
-
-  useAddItem.extend = extendHook
-
-  return useAddItem
-}
-
-export default extendHook(fetcher)
+export default useAddItem

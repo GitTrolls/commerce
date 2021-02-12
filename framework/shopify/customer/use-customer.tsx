@@ -1,35 +1,27 @@
 import type { HookFetcher } from '@commerce/utils/types'
 import type { SwrOptions } from '@commerce/utils/use-data'
 import useCommerceCustomer from '@commerce/use-customer'
-import getCustomerQuery from '@framework/utils/queries/get-customer-query'
-import { getCustomerToken } from '@framework/utils/customer-token'
 
-const defaultOpts = {
-  query: getCustomerQuery,
+const defaultOpts = {}
+
+export type Customer = {
+  entityId: number
+  firstName: string
+  lastName: string
+  email: string
 }
+export type CustomerData = {}
 
-export const fetcher: HookFetcher<any | null> = async (options, _, fetch) => {
-  const customerAccessToken = getCustomerToken()
-  if (customerAccessToken) {
-    const data = await fetch<any | null>({
-      ...defaultOpts,
-      ...options,
-      variables: { customerAccessToken },
-    })
-    return data?.customer ?? null
-  }
+export const fetcher: HookFetcher<Customer | null> = async () => {
   return null
 }
 
 export function extendHook(
   customFetcher: typeof fetcher,
-  swrOptions?: SwrOptions<any | null>
+  swrOptions?: SwrOptions<Customer | null>
 ) {
   const useCustomer = () => {
-    return useCommerceCustomer(defaultOpts, [], customFetcher, {
-      revalidateOnFocus: false,
-      ...swrOptions,
-    })
+    return { data: { firstName: null, lastName: null, email: null } }
   }
 
   useCustomer.extend = extendHook
