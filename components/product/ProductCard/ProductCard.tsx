@@ -7,8 +7,7 @@ import Image, { ImageProps } from 'next/image'
 
 interface Props {
   className?: string
-  // TODO: use the product type here
-  product: any
+  product: Product
   variant?: 'slim' | 'simple'
   imgProps?: Omit<ImageProps, 'src'>
 }
@@ -26,8 +25,8 @@ const ProductCard: FC<Props> = ({
     <a className={cn(s.root, { [s.simple]: variant === 'simple' }, className)}>
       {variant === 'slim' ? (
         <div className="relative overflow-hidden box-border">
-          <div className="absolute inset-0 flex items-center justify-end mr-8 z-20">
-            <span className="bg-black text-white inline-block p-3 font-bold text-xl break-words">
+          <div className="absolute inset-0 flex items-start justify-end m-1 z-20">
+            <span className="text-black  inline-block p-3 font-bold text-xl break-words">
               {product.name}
             </span>
           </div>
