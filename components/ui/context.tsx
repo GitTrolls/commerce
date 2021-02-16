@@ -127,12 +127,6 @@ function uiReducer(state: State, action: Action) {
         toastText: action.text,
       }
     }
-    case 'SET_USER_AVATAR': {
-      return {
-        ...state,
-        userAvatar: action.value,
-      }
-    }
   }
 }
 
