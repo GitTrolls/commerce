@@ -1,43 +1,28 @@
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
 import type { GetStaticPropsContext } from 'next'
-
-import { Heart } from '@components/icons'
-import { Layout } from '@components/common'
-import { Text, Container } from '@components/ui'
-import { defaultPageProps } from '@lib/defaults'
 import { getConfig } from '@framework/api'
-import { useCustomer } from '@framework/customer'
-import { WishlistCard } from '@components/wishlist'
-import useWishlist from '@framework/wishlist/use-wishlist'
 import getAllPages from '@framework/common/get-all-pages'
-import Features from '@commerce/utils/features'
+import useWishlist from '@framework/wishlist/use-wishlist'
+import { Layout } from '@components/common'
+import { Heart } from '@components/icons'
+import { Text, Container } from '@components/ui'
+import { WishlistCard } from '@components/wishlist'
+import { defaultPageProps } from '@lib/defaults'
+import { useCustomer } from '@framework/customer'
 
 export async function getStaticProps({
   preview,
   locale,
 }: GetStaticPropsContext) {
-  // Disabling page if Feature is not available
-  if (Features.isEnabled('wishlist')) {
-    return {
-      notFound: true,
-    }
-  }
-
   const config = getConfig({ locale })
   const { pages } = await getAllPages({ config, preview })
   return {
-    props: {
-      pages,
-      ...defaultPageProps,
-    },
+    props: { ...defaultPageProps, pages },
   }
 }
 
 export default function Wishlist() {
   const { data: customer } = useCustomer()
   const { data, isLoading, isEmpty } = useWishlist()
-  const router = useRouter()
 
   return (
     <Container>

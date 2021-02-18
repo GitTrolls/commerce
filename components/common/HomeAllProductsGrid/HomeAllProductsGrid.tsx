@@ -5,21 +5,14 @@ import { Grid } from '@components/ui'
 import { ProductCard } from '@components/product'
 import s from './HomeAllProductsGrid.module.css'
 import { getCategoryPath, getDesignerPath } from '@lib/search'
-import wishlist from '@framework/api/wishlist'
 
 interface Props {
   categories?: any
   brands?: any
   products?: Product[]
-  wishlist?: boolean
 }
 
-const HomeAllProductsGrid: FC<Props> = ({
-  categories,
-  brands,
-  products = [],
-  wishlist = false,
-}) => {
+const Head: FC<Props> = ({ categories, brands, products = [] }) => {
   return (
     <div className={s.root}>
       <div className={s.asideWrapper}>
@@ -65,7 +58,6 @@ const HomeAllProductsGrid: FC<Props> = ({
                 width: 480,
                 height: 480,
               }}
-              wishlist={wishlist}
             />
           ))}
         </Grid>
@@ -74,4 +66,4 @@ const HomeAllProductsGrid: FC<Props> = ({
   )
 }
 
-export default HomeAllProductsGrid
+export default Head

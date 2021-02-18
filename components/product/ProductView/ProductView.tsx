@@ -13,16 +13,15 @@ import usePrice from '@framework/product/use-price'
 import { useAddItem } from '@framework/cart'
 
 import { getVariant, SelectedOptions } from '../helpers'
-import WishlistButton from '@components/wishlist/WishlistButton'
+// import WishlistButton from '@components/wishlist/WishlistButton'
 
 interface Props {
   className?: string
   children?: any
   product: Product
-  wishlist?: boolean
 }
 
-const ProductView: FC<Props> = ({ product, wishlist = false }) => {
+const ProductView: FC<Props> = ({ product }) => {
   const addItem = useAddItem()
   const { price } = usePrice({
     amount: product.price.value,
@@ -152,13 +151,11 @@ const ProductView: FC<Props> = ({ product, wishlist = false }) => {
             </Button>
           </div>
         </div>
-        {wishlist && (
-          <WishlistButton
-            className={s.wishlistButton}
-            productId={product.id}
-            variant={product.variants[0]!}
-          />
-        )}
+        {/* <WishlistButton
+          className={s.wishlistButton}
+          productId={product.id}
+          variant={product.variants[0]!}
+        /> */}
       </div>
     </Container>
   )

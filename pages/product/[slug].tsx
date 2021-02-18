@@ -11,15 +11,14 @@ import { getConfig } from '@framework/api'
 import getProduct from '@framework/product/get-product'
 import getAllPages from '@framework/common/get-all-pages'
 import getAllProductPaths from '@framework/product/get-all-product-paths'
-import Features from '@commerce/utils/features'
 
 export async function getStaticProps({
   params,
   locale,
   preview,
 }: GetStaticPropsContext<{ slug: string }>) {
-  const isWishlistEnabled = Features.isEnabled('wishlist')
   const config = getConfig({ locale })
+
   const { pages } = await getAllPages({ config, preview })
   const { product } = await getProduct({
     variables: { slug: params!.slug },
@@ -32,13 +31,7 @@ export async function getStaticProps({
   }
 
   return {
-    props: {
-      pages,
-      product,
-      commerceFeatures: {
-        wishlist: isWishlistEnabled,
-      },
-    },
+    props: { pages, product },
     revalidate: 200,
   }
 }
@@ -62,17 +55,13 @@ export async function getStaticPaths({ locales }: GetStaticPathsContext) {
 
 export default function Slug({
   product,
-  commerceFeatures,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter()
 
   return router.isFallback ? (
     <h1>Loading...</h1> // TODO (BC) Add Skeleton Views
   ) : (
-    <ProductView
-      product={product as any}
-      wishlist={commerceFeatures.wishlist}
-    />
+    <ProductView product={product as any} />
   )
 }
 

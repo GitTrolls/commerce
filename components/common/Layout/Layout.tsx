@@ -41,14 +41,10 @@ const FeatureBar = dynamic(
 interface Props {
   pageProps: {
     pages?: Page[]
-    commerceFeatures: Record<string, boolean>
   }
 }
 
-const Layout: FC<Props> = ({
-  children,
-  pageProps: { commerceFeatures, ...pageProps },
-}) => {
+const Layout: FC<Props> = ({ children, pageProps }) => {
   const {
     displaySidebar,
     displayModal,
@@ -58,11 +54,11 @@ const Layout: FC<Props> = ({
   } = useUI()
   const { acceptedCookies, onAcceptCookies } = useAcceptCookies()
   const { locale = 'en-US' } = useRouter()
-  const isWishlistEnabled = commerceFeatures.wishlist
+
   return (
     <CommerceProvider locale={locale}>
       <div className={cn(s.root)}>
-        <Navbar wishlist={isWishlistEnabled} />
+        <Navbar />
         <main className="fit">{children}</main>
         <Footer pages={pageProps.pages} />
 
@@ -73,7 +69,7 @@ const Layout: FC<Props> = ({
         </Modal>
 
         <Sidebar open={displaySidebar} onClose={closeSidebar}>
-          <CartSidebarView wishlist={isWishlistEnabled} />
+          <CartSidebarView />
         </Sidebar>
 
         <FeatureBar
