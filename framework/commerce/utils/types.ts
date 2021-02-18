@@ -1,4 +1,3 @@
-import { LineItem } from '@framework/types'
 import type { ConfigInterface } from 'swr'
 import type { CommerceError } from './errors'
 import type { ResponseState } from './use-data'
@@ -32,15 +31,16 @@ export type HookFetcher<Data, Input = null, Result = any> = (
   fetch: <T = Result, Body = any>(options: FetcherOptions<Body>) => Promise<T>
 ) => Data | Promise<Data>
 
-export type HookFetcherFn<Data, Input = never, Result = any, Body = any> = (
-  context: HookFetcherContext<Input, Result, Body>
-) => Data | Promise<Data>
-
-export type HookFetcherContext<Input = never, Result = any, Body = any> = {
+export type HookFetcherFn<
+  Data,
+  Input = never,
+  Result = any,
+  Body = any
+> = (context: {
   options: HookFetcherOptions
   input: Input
   fetch: <T = Result, B = Body>(options: FetcherOptions<B>) => Promise<T>
-}
+}) => Data | Promise<Data>
 
 export type HookFetcherOptions = { method?: string } & (
   | { query: string; url?: string }
@@ -52,6 +52,8 @@ export type HookInputValue = string | number | boolean | undefined
 export type HookSwrInput = [string, HookInputValue][]
 
 export type HookFetchInput = { [k: string]: HookInputValue }
+
+export type HookInput = {}
 
 export type HookHandler<
   // Data obj returned by the hook and fetch operation
@@ -90,39 +92,6 @@ export type MutationHandler<
   }) => Data | Promise<Data>
   fetchOptions: HookFetcherOptions
   fetcher?: HookFetcherFn<Data, FetchInput>
-}
-
-export type HookFunction<
-  Input extends { [k: string]: unknown } | {},
-  T
-> = keyof Input extends never
-  ? () => T
-  : Partial<Input> extends Input
-  ? (input?: Input) => T
-  : (input: Input) => T
-
-export type MutationHook<
-  // Data obj returned by the hook and fetch operation
-  Data,
-  // Input expected by the hook
-  Input extends { [k: string]: unknown } = {},
-  // Input expected by the action returned by the hook
-  ActionInput extends { [k: string]: unknown } = {},
-  // Input expected before doing a fetch operation
-  FetchInput extends { [k: string]: unknown } = ActionInput
-> = {
-  useHook(
-    context: HookContext<Data, FetchInput>
-  ): HookFunction<Input, HookFunction<ActionInput, Data | Promise<Data>>>
-  fetchOptions: HookFetcherOptions
-  fetcher?: HookFetcherFn<Data, FetchInput>
-}
-
-export type HookContext<
-  Data,
-  FetchInput extends { [k: string]: unknown } = {}
-> = {
-  fetch: (context: { input: FetchInput }) => Data | Promise<Data>
 }
 
 export type SwrOptions<Data, Input = null, Result = any> = ConfigInterface<

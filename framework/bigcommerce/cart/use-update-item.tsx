@@ -1,10 +1,9 @@
 import { useCallback } from 'react'
 import debounce from 'lodash.debounce'
-import type { HookContext, HookFetcherContext } from '@commerce/utils/types'
+import type { HookFetcher } from '@commerce/utils/types'
 import { ValidationError } from '@commerce/utils/errors'
-import useUpdateItem, {
-  UpdateItemInput as UpdateItemInputBase,
-  UseUpdateItem,
+import useCartUpdateItem, {
+  UpdateItemInput as UseUpdateItemInput,
 } from '@commerce/cart/use-update-item'
 import { normalizeCart } from '../lib/normalize'
 import type {
@@ -16,50 +15,49 @@ import type {
 import { fetcher as removeFetcher } from './use-remove-item'
 import useCart from './use-cart'
 
+const defaultOpts = {
+  url: '/api/bigcommerce/cart',
+  method: 'PUT',
+}
+
 export type UpdateItemInput<T = any> = T extends LineItem
-  ? Partial<UpdateItemInputBase<LineItem>>
-  : UpdateItemInputBase<LineItem>
+  ? Partial<UseUpdateItemInput<LineItem>>
+  : UseUpdateItemInput<LineItem>
 
-export default useUpdateItem as UseUpdateItem<typeof handler>
-
-export const handler = {
-  fetchOptions: {
-    url: '/api/bigcommerce/cart',
-    method: 'PUT',
-  },
-  async fetcher({
-    input: { itemId, item },
-    options,
-    fetch,
-  }: HookFetcherContext<UpdateCartItemBody>) {
-    if (Number.isInteger(item.quantity)) {
-      // Also allow the update hook to remove an item if the quantity is lower than 1
-      if (item.quantity! < 1) {
-        return removeFetcher(null, { itemId }, fetch)
-      }
-    } else if (item.quantity) {
-      throw new ValidationError({
-        message: 'The item quantity has to be a valid integer',
-      })
+export const fetcher: HookFetcher<Cart | null, UpdateCartItemBody> = async (
+  options,
+  { itemId, item },
+  fetch
+) => {
+  if (Number.isInteger(item.quantity)) {
+    // Also allow the update hook to remove an item if the quantity is lower than 1
+    if (item.quantity! < 1) {
+      return removeFetcher(null, { itemId }, fetch)
     }
-
-    const data = await fetch<BigcommerceCart, UpdateCartItemBody>({
-      ...options,
-      body: { itemId, item },
+  } else if (item.quantity) {
+    throw new ValidationError({
+      message: 'The item quantity has to be a valid integer',
     })
+  }
 
-    return normalizeCart(data)
-  },
-  useHook: ({ fetch }: HookContext<Cart | null, UpdateCartItemBody>) => <
-    T extends LineItem | undefined = undefined
-  >(
-    ctx: {
-      item?: T
-      wait?: number
-    } = {}
+  const data = await fetch<BigcommerceCart, UpdateCartItemBody>({
+    ...defaultOpts,
+    ...options,
+    body: { itemId, item },
+  })
+
+  return normalizeCart(data)
+}
+
+function extendHook(customFetcher: typeof fetcher, cfg?: { wait?: number }) {
+  const useUpdateItem = <T extends LineItem | undefined = undefined>(
+    item?: T
   ) => {
-    const { item } = ctx
-    const { mutate } = useCart() as any
+    const { mutate } = useCart()
+    const fn = useCartUpdateItem<Cart | null, UpdateCartItemBody>(
+      defaultOpts,
+      customFetcher
+    )
 
     return useCallback(
       debounce(async (input: UpdateItemInput<T>) => {
@@ -73,16 +71,20 @@ export const handler = {
           })
         }
 
-        const data = await fetch({
-          input: {
-            itemId,
-            item: { productId, variantId, quantity: input.quantity },
-          },
+        const data = await fn({
+          itemId,
+          item: { productId, variantId, quantity: input.quantity },
         })
         await mutate(data, false)
         return data
-      }, ctx.wait ?? 500),
-      [fetch, mutate]
+      }, cfg?.wait ?? 500),
+      [fn, mutate]
     )
-  },
+  }
+
+  useUpdateItem.extend = extendHook
+
+  return useUpdateItem
 }
+
+export default extendHook(fetcher)

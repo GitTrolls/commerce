@@ -6,12 +6,7 @@ import {
   useMemo,
   useRef,
 } from 'react'
-import {
-  Fetcher,
-  HookHandler,
-  MutationHandler,
-  MutationHook,
-} from './utils/types'
+import { Fetcher, HookHandler, MutationHandler } from './utils/types'
 import type { FetchCartInput } from './cart/use-cart'
 import type { Cart, Wishlist, Customer, SearchProductsData } from './types'
 
@@ -21,9 +16,7 @@ export type Provider = CommerceConfig & {
   fetcher: Fetcher
   cart?: {
     useCart?: HookHandler<Cart | null, any, FetchCartInput>
-    useAddItem?: MutationHook<any, any, any>
-    useUpdateItem?: MutationHook<any, any, any>
-    useRemoveItem?: MutationHook<any, any, any>
+    useAddItem?: MutationHandler<Cart, any, any>
   }
   wishlist?: {
     useWishlist?: HookHandler<Wishlist | null, any, any>
