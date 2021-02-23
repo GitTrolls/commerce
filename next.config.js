@@ -1,10 +1,13 @@
 module.exports = {
   images: {
-    domains: ['cdn11.bigcommerce.com', 'cdn.shopify.com'],
+    domains: ['cdn11.bigcommerce.com'],
   },
   i18n: {
     locales: ['en-US', 'es'],
     defaultLocale: 'en-US',
+  },
+  env: {
+    WISHLIST_ENABLED: false,
   },
   rewrites() {
     return [
@@ -33,12 +36,5 @@ module.exports = {
         destination: '/search',
       },
     ]
-  },
-  typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
-    ignoreBuildErrors: true,
   },
 }
