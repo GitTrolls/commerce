@@ -1,41 +1,30 @@
-import { Product } from '@commerce/types'
-import { getConfig, ShopifyConfig } from '../api'
-import fetchAllProducts from '../api/utils/fetch-all-products'
-import { ProductEdge } from '../schema'
-import getAllProductsPathsQuery from '../utils/queries/get-all-products-paths-query'
-
-type ProductPath = {
-  path: string
-}
-
-export type ProductPathNode = {
-  node: ProductPath
-}
+import Client from 'shopify-buy'
+import { getConfig } from '../api'
+import { Product } from '../types'
+import toCommerceProducts from '../utils/to-commerce-products'
 
 type ReturnType = {
-  products: ProductPathNode[]
+  products: any[]
 }
 
-const getAllProductPaths = async (options?: {
-  variables?: any
-  config?: ShopifyConfig
-  preview?: boolean
-}): Promise<ReturnType> => {
-  let { config, variables = { first: 250 } } = options ?? {}
-  config = getConfig(config)
+const getAllProductPaths = async (): Promise<ReturnType> => {
+  const config = getConfig()
 
-  const products = await fetchAllProducts({
-    config,
-    query: getAllProductsPathsQuery,
-    variables,
+  const client = Client.buildClient({
+    storefrontAccessToken: config.apiToken,
+    domain: config.commerceUrl,
   })
 
+  const res = (await client.product.fetchAll()) as Product[]
+
+  const products = toCommerceProducts(res)
+
   return {
-    products: products?.map(({ node: { handle } }: ProductEdge) => ({
-      node: {
-        path: `/${handle}`,
-      },
-    })),
+    products: products.map((product) => {
+      return {
+        node: { ...product },
+      }
+    }),
   }
 }
 

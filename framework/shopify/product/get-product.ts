@@ -1,31 +1,36 @@
-import { GraphQLFetcherResult } from '@commerce/api'
-import { getConfig, ShopifyConfig } from '../api'
-import { normalizeProduct, getProductQuery } from '../utils'
+import Client from 'shopify-buy'
+import { ShopifyConfig } from '../api'
+import { Product } from '../types'
+import toCommerceProducts from '../utils/to-commerce-products'
+
+export type ProductNode = Product
 
 type Variables = {
   slug: string
+}
+
+type Options = {
+  variables: Variables
+  config: ShopifyConfig
+  preview?: boolean
 }
 
 type ReturnType = {
   product: any
 }
 
-const getProduct = async (options: {
-  variables: Variables
-  config: ShopifyConfig
-  preview?: boolean
-}): Promise<ReturnType> => {
-  let { config, variables } = options ?? {}
-  config = getConfig(config)
+const getProduct = async (options: Options): Promise<ReturnType> => {
+  const { variables, config } = options
 
-  const { data }: GraphQLFetcherResult = await config.fetch(getProductQuery, {
-    variables,
+  const client = Client.buildClient({
+    storefrontAccessToken: config.apiToken,
+    domain: config.commerceUrl,
   })
 
-  const { productByHandle: product } = data
+  const res = (await client.product.fetchByHandle(variables.slug)) as Product
 
   return {
-    product: product ? normalizeProduct(product) : null,
+    product: toCommerceProducts([res])[0],
   }
 }
 

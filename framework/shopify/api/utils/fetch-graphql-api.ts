@@ -1,19 +1,33 @@
-import type { GraphQLFetcher } from '@commerce/api'
-import fetch from './fetch'
+import { CommerceAPIFetchOptions } from '@commerce/api'
+import { FetcherError } from '@commerce/utils/errors'
+import { getConfig } from '../index'
 
-import { API_URL, API_TOKEN } from '../../const'
-import { getError } from '@framework/utils/handle-fetch-response'
+export interface GraphQLFetcherResult<Data = any> {
+  data: Data
+  res: Response
+}
+export type GraphQLFetcher<
+  Data extends GraphQLFetcherResult = GraphQLFetcherResult,
+  Variables = any
+> = (
+  query: string,
+  queryData?: CommerceAPIFetchOptions<Variables>,
+  fetchOptions?: RequestInit
+) => Promise<Data>
 
 const fetchGraphqlApi: GraphQLFetcher = async (
   query: string,
   { variables } = {},
   fetchOptions
 ) => {
-  const res = await fetch(API_URL, {
+  const config = getConfig()
+  const url = `https://${config.commerceUrl}/api/2021-01/graphql.json`
+
+  const res = await fetch(url, {
     ...fetchOptions,
     method: 'POST',
     headers: {
-      'X-Shopify-Storefront-Access-Token': API_TOKEN!,
+      'X-Shopify-Storefront-Access-Token': config.apiToken,
       ...fetchOptions?.headers,
       'Content-Type': 'application/json',
     },
@@ -23,12 +37,15 @@ const fetchGraphqlApi: GraphQLFetcher = async (
     }),
   })
 
-  const { data, errors, status } = await res.json()
-
-  if (errors) {
-    throw getError(errors, status)
+  const json = await res.json()
+  if (json.errors) {
+    throw new FetcherError({
+      errors: json.errors ?? [{ message: 'Failed to fetch Shopify API' }],
+      status: res.status,
+    })
   }
 
-  return { data, res }
+  return { data: json.data, res }
 }
+
 export default fetchGraphqlApi
