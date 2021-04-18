@@ -10,7 +10,7 @@ import {
   MutationCheckoutCreateArgs,
 } from '../schema'
 import useLogin, { UseLogin } from '@commerce/auth/use-login'
-import { setCustomerToken, throwUserErrors } from '../utils'
+import { setCustomerToken } from '../utils'
 
 export default useLogin as UseLogin<typeof handler>
 
@@ -45,8 +45,13 @@ export const handler: MutationHook<null, {}, CustomerAccessTokenCreateInput> = {
       },
     })
 
-    throwUserErrors(customerAccessTokenCreate?.customerUserErrors)
+    const errors = customerAccessTokenCreate?.customerUserErrors
 
+    if (errors && errors.length) {
+      throw new ValidationError({
+        message: getErrorMessage(errors[0]),
+      })
+    }
     const customerAccessToken = customerAccessTokenCreate?.customerAccessToken
     const accessToken = customerAccessToken?.accessToken
 
