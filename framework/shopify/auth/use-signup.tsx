@@ -1,16 +1,15 @@
 import { useCallback } from 'react'
 import type { MutationHook } from '@commerce/utils/types'
-import { CommerceError, ValidationError } from '@commerce/utils/errors'
+import { CommerceError } from '@commerce/utils/errors'
 import useSignup, { UseSignup } from '@commerce/auth/use-signup'
 import useCustomer from '../customer/use-customer'
-import {
-  CustomerCreateInput,
-  Mutation,
-  MutationCustomerCreateArgs,
-} from '../schema'
+import { CustomerCreateInput } from '../schema'
 
-import { customerCreateMutation } from '../utils/mutations'
-import { handleAutomaticLogin, throwUserErrors } from '../utils'
+import {
+  customerCreateMutation,
+  customerAccessTokenCreateMutation,
+} from '../utils/mutations'
+import handleLogin from '../utils/handle-login'
 
 export default useSignup as UseSignup<typeof handler>
 
@@ -34,11 +33,7 @@ export const handler: MutationHook<
           'A first name, last name, email and password are required to signup',
       })
     }
-
-    const { customerCreate } = await fetch<
-      Mutation,
-      MutationCustomerCreateArgs
-    >({
+    const data = await fetch({
       ...options,
       variables: {
         input: {
@@ -50,10 +45,19 @@ export const handler: MutationHook<
       },
     })
 
-    throwUserErrors(customerCreate?.customerUserErrors)
-    await handleAutomaticLogin(fetch, { email, password })
-
-    return null
+    try {
+      const loginData = await fetch({
+        query: customerAccessTokenCreateMutation,
+        variables: {
+          input: {
+            email,
+            password,
+          },
+        },
+      })
+      handleLogin(loginData)
+    } catch (error) {}
+    return data
   },
   useHook: ({ fetch }) => () => {
     const { revalidate } = useCustomer()
