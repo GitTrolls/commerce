@@ -7,7 +7,6 @@ const {
 const provider = commerce.provider || getProviderName()
 const isBC = provider === 'bigcommerce'
 const isShopify = provider === 'shopify'
-const isSwell = provider === 'swell'
 
 module.exports = withCommerceConfig({
   commerce,
@@ -17,7 +16,7 @@ module.exports = withCommerceConfig({
   },
   rewrites() {
     return [
-      (isBC || isShopify || isSwell) && {
+      (isBC || isShopify) && {
         source: '/checkout',
         destination: '/api/bigcommerce/checkout',
       },
